@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>com.rogerio</groupId>
 	<artifactId>battleship-java</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -13,14 +13,14 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
-	
+
 	<developers>
 		<developer>
 			<name>Rogerio Floriano</name>
 			<email>florianodacunhart@student.douglascollege.ca</email>
 		</developer>
- 	</developers>
- 	
+	</developers>
+
 	<scm>
 		<connection>scm:git:git://github.com:petruki/battleship-java.git</connection>
 		<developerConnection>scm:git:ssh://github.com:petruki/battleship-java.git</developerConnection>
@@ -30,6 +30,21 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<configuration>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+								<classpathPrefix>libs/</classpathPrefix>
+								<mainClass>
+									com.rogerio.GameInitializer
+								</mainClass>
+							</manifest>
+						</archive>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
