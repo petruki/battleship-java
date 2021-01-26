@@ -19,6 +19,18 @@ Battleship Java is a simple Java Swing based game app.
 
 Import the project as Maven Project.
 
+#### Compiling using Maven
+
+**Compile and test**
+```
+mvn clean install
+```
+
+**Generate executable**
+```
+mvn clean compile assembly:single
+```
+
 #### Contribution
 
 1. Test.

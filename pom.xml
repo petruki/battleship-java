@@ -5,7 +5,7 @@
 
 	<groupId>com.rogerio</groupId>
 	<artifactId>battleship-java</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Battleship Java</name>
 
 	<properties>
@@ -67,6 +67,27 @@
 								</mainClass>
 							</manifest>
 						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<archive>
+							<manifest>
+								<mainClass>com.rogerio.GameInitializer</mainClass>
+							</manifest>
+						</archive>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
 					</configuration>
 				</plugin>
 				<plugin>
