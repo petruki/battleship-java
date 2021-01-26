@@ -9,6 +9,7 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
+    sudo apt-get install xorg openbox
             
     steps:
     - uses: actions/checkout@v2
