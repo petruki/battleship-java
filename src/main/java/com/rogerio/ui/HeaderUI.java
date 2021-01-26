@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import com.rogerio.model.Scoreboard;
+
 @SuppressWarnings("serial")
 public class HeaderUI extends JPanel {
 	
@@ -54,6 +56,35 @@ public class HeaderUI extends JPanel {
 		add(btnReload);
 	}
 	
+	private void updateTxtTimer() {
+		pattern = "%s:0%s";
+		if (++secs == 60) {
+			secs = 0;
+			minutes++;
+		} else if (secs > 9) {
+			pattern = "%s:%s";
+		}
+
+		txtTimer.setText(String.format(pattern, minutes, secs));
+	}
+	
+	public void updateScoreUI(boolean hit) {
+		Scoreboard scoreBoard = context.getGameController().getScoreBoard();
+		
+		if (hit) {
+			if (scoreBoard.addHit()) {
+				timer.cancel();
+				txtMessage.setText(
+						String.format("You sank all my battleships, in %s guesses.", 
+								scoreBoard.getHit() + scoreBoard.getMiss()));
+			}
+		} else {
+			scoreBoard.addMiss();
+		}
+		
+		context.getScoreUI().updateScore(scoreBoard);
+	}
+	
 	public void reloadGame() {
 		txtTimer.setText("0:00");
 		txtMessage.setText("");
@@ -75,16 +106,8 @@ public class HeaderUI extends JPanel {
     	timer.scheduleAtFixedRate(timerTask, 1000, 1000);
     }
 	
-	private void updateTxtTimer() {
-		pattern = "%s:0%s";
-		if (++secs == 60) {
-			secs = 0;
-			minutes++;
-		} else if (secs > 9) {
-			pattern = "%s:%s";
-		}
-
-		txtTimer.setText(String.format(pattern, minutes, secs));
+	public void updateText(String textMessage) {
+		txtMessage.setText(textMessage);
 	}
 
 	public Timer getTimer() {

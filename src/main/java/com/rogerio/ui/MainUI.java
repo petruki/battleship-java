@@ -25,8 +25,13 @@ public class MainUI extends JFrame {
 	private HeaderUI headerUI;
 	private BoardUI boardUI;
 	private ScoreUI scoreUI;
+	
+	private int ships;
+	private int shipSize;
 
-	public MainUI() {
+	public MainUI(int ships, int shipSize) {
+		this.ships = ships;
+		this.shipSize = shipSize;
 		buildPanel();
 	}
 	
@@ -65,8 +70,10 @@ public class MainUI extends JFrame {
 	}
 	
 	public void onStartNewGame(ActionEvent event) {
+		Object[][] matrix = gameController.generateMatrix(7, 7, ships, shipSize);
+		
 		headerUI.reloadGame();
-		boardUI.setModel(boardUI.getTableModel().getTableModel(gameController.generateMatrix(7, 7, 4, 3)));
+		boardUI.setModel(boardUI.getTableModel().getTableModel(matrix));
 		scoreUI.updateScore(gameController.getScoreBoard());
 		new TableRender(boardUI);
 	}

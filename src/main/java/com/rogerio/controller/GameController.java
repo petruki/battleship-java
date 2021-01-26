@@ -3,18 +3,23 @@ package com.rogerio.controller;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.rogerio.model.Scoreboard;
 import com.rogerio.model.Target;
 
 public class GameController {
+	
+	private static final Logger logger = LogManager.getLogger(GameController.class);
 	
 	private Scoreboard scoreBoard;
 
 	/**
 	 * Generate game matrix targets
 	 */
-	public Object[][] generateMatrix(int rows, int columns, int targets, int shipSize) {
-		scoreBoard = new Scoreboard(targets * shipSize);
+	public Object[][] generateMatrix(int rows, int columns, int ships, int shipSize) {
+		scoreBoard = new Scoreboard(ships * shipSize);
 		
 		Object[][] matrix = new Object[rows][columns];
 		Arrays.stream(matrix).forEach(r -> Arrays.fill(r, 0));
@@ -23,21 +28,24 @@ public class GameController {
 		int randomRow;
 		int randomColumn;
 		
-		while (targets != 0) {
+		while (ships != 0) {
 			randomRow = random.nextInt(rows) + 0;
 			randomColumn = random.nextInt(columns) + 0;
 			
 			if (Integer.parseInt(matrix[randomRow][randomColumn].toString()) == 0) {
-				if (!addShip(matrix, randomRow, randomColumn, shipSize, targets--)) {
-					targets++;
+				if (!addShip(matrix, randomRow, randomColumn, shipSize, ships--)) {
+					ships++;
 				}
 			}
 		}
 		
-		Arrays.stream(matrix).forEach(row -> {
-			Arrays.stream(row).forEach(col -> System.out.print(col + " "));
-			System.out.println();
-		});
+		if (logger.isDebugEnabled()) {
+			System.out.println("Do not cheat!");
+			Arrays.stream(matrix).forEach(row -> {
+				Arrays.stream(row).forEach(col -> System.out.print(col + " "));
+				System.out.println();
+			});
+		}
 		
 		return matrix;
 	}
@@ -112,10 +120,15 @@ public class GameController {
 					return (Target) result;
 				} else {
 					int slot = Integer.parseInt(result.toString());
-					boardMatrix[row][col] = -1;
+					if (slot != 0)
+						boardMatrix[row][col] = -1;
 					return Target.createTarget(slot, row, col);
 				}
 			}
+		}
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Coordinate: %s", coord));
 		}
 
 		throw new Exception("Oops, that's off the board!");

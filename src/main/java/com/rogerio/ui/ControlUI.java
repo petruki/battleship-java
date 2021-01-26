@@ -10,11 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 
-import com.rogerio.model.Scoreboard;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.rogerio.model.Target;
 
 @SuppressWarnings("serial")
 public class ControlUI extends JPanel {
+	
+	private static final Logger logger = LogManager.getLogger(ControlUI.class);
 	
 	private JTextPane txtCoordinate;
 	private final MainUI context;
@@ -48,6 +52,7 @@ public class ControlUI extends JPanel {
 	public void onFire(ActionEvent event) {
 		try {
 			final BoardUI boardUI = context.getBoardUI();
+			final HeaderUI headerUI = context.getHeaderUI();
 			final Target result = context
 					.getGameController()
 					.onFire(boardUI.getTableModel().getBoard(), txtCoordinate.getText());
@@ -55,47 +60,28 @@ public class ControlUI extends JPanel {
 			switch (result.getSlotType()) {
 			case HIT:
 				if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
-					context.getHeaderUI().getTxtMessage().setText("Oops, you already hit that location!");
+					headerUI.updateText("Oops, you already hit that location!");
 				else {
 					if (context.getGameController().hasSink(boardUI.getTableModel().getBoard(), result.getShipId())) {
-						context.getHeaderUI().getTxtMessage().setText("You sank my battleship!");
+						headerUI.updateText("You sank my battleship!");
 					} else {
-						context.getHeaderUI().getTxtMessage().setText("HIT!");
+						headerUI.updateText("HIT!");
 					}
 
-					updateScoreUI(true);
+					headerUI.updateScoreUI(true);
 				}
 				break;
 			case MISSED:
-				context.getHeaderUI().getTxtMessage().setText("You missed.");
-				updateScoreUI(false);
-				break;
-			default:
-				break;
+				headerUI.updateText("You missed.");
+				headerUI.updateScoreUI(false);
 			}
 			
-			boardUI.selectAll();
 			boardUI.getTableModel().getTableModel().setValueAt(result, result.getRowCoord(), result.getColCoord());
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			logger.error(e);
+			if (event != null)
+				JOptionPane.showMessageDialog(context, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-	}
-	
-	public void updateScoreUI(boolean hit) {
-		Scoreboard scoreBoard = context.getGameController().getScoreBoard();
-		
-		if (hit) {
-			if (scoreBoard.addHit()) {
-				context.getHeaderUI().getTimer().cancel();
-				context.getHeaderUI().getTxtMessage()
-					.setText(String.format("You sank all my battleships, in %s guesses.", 
-								scoreBoard.getHit() + scoreBoard.getMiss()));
-			}
-		} else {
-			scoreBoard.addMiss();
-		}
-		
-		context.getScoreUI().updateScore(scoreBoard);
 	}
 
 	public JTextPane getTxtCoordinate() {

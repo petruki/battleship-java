@@ -12,6 +12,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		
+		<log4j.version>2.13.3</log4j.version>
+		<junit.version>5.4.0</junit.version>
 	</properties>
 
 	<developers>
@@ -26,6 +29,27 @@
 		<developerConnection>scm:git:ssh://github.com:petruki/battleship-java.git</developerConnection>
 		<url>https://github.com/petruki</url>
 	</scm>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<pluginManagement>
