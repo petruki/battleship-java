@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		
+
 		<log4j.version>2.13.3</log4j.version>
 		<junit.version>5.4.0</junit.version>
 	</properties>
@@ -43,7 +43,7 @@
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -67,6 +67,17 @@
 								</mainClass>
 							</manifest>
 						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.17</version>
+					<configuration>
+						<excludes>
+							<exclude>**/com/rogerio/ui/UITest.java</exclude>
+							<exclude>**/com/rogerio/TestSuite.java</exclude>
+						</excludes>
 					</configuration>
 				</plugin>
 				<plugin>
