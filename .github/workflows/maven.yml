@@ -2,7 +2,7 @@ name: Maven CI/CD
 
 on:
   push:
-    branches: [ master, beta ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -22,10 +22,7 @@ jobs:
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2      
-
-    - name: Setup VM
-      run: export DISPLAY=<hostname_to_display_X11_graphics_to>:0.0
+        restore-keys: ${{ runner.os }}-m2
       
     - name: Build and test project with Maven
       run: mvn -B package --file pom.xml
