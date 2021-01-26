@@ -1,4 +1,4 @@
-![Java CI with Maven](https://github.com/petruki/battleship-java/workflows/Java%20CI%20with%20Maven/badge.svg)
+![Maven CI/CD](https://github.com/petruki/battleship-java/workflows/Maven%20CI/CD/badge.svg)
 
 ### Battleship Java
 
