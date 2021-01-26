@@ -7,6 +7,9 @@ import javax.swing.JTable;
 
 import com.rogerio.model.Target;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 public abstract class TableListener extends MouseAdapter {
 	
 	private final JTable table;

@@ -11,6 +11,9 @@ import javax.swing.border.TitledBorder;
 
 import com.rogerio.model.Scoreboard;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 @SuppressWarnings("serial")
 public class ScoreUI extends JPanel {
 	

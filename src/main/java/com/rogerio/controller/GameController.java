@@ -9,6 +9,9 @@ import org.apache.logging.log4j.Logger;
 import com.rogerio.model.Scoreboard;
 import com.rogerio.model.Target;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 public class GameController {
 	
 	private static final Logger logger = LogManager.getLogger(GameController.class);
@@ -19,8 +22,10 @@ public class GameController {
 	 * Generate game matrix targets
 	 */
 	public Object[][] generateMatrix(int rows, int columns, int ships, int shipSize) {
+		//start scoreboard
 		scoreBoard = new Scoreboard(ships * shipSize);
 		
+		//start empty board
 		Object[][] matrix = new Object[rows][columns];
 		Arrays.stream(matrix).forEach(r -> Arrays.fill(r, 0));
 		
@@ -28,6 +33,7 @@ public class GameController {
 		int randomRow;
 		int randomColumn;
 		
+		//initialize board
 		while (ships != 0) {
 			randomRow = random.nextInt(rows) + 0;
 			randomColumn = random.nextInt(columns) + 0;
@@ -39,6 +45,7 @@ public class GameController {
 			}
 		}
 		
+		//print generated board
 		if (logger.isDebugEnabled()) {
 			System.out.println("Do not cheat!");
 			Arrays.stream(matrix).forEach(row -> {
@@ -113,9 +120,11 @@ public class GameController {
 			int row = Arrays.binarySearch(Target.CHARS, String.valueOf(coord.charAt(0)).toUpperCase());
 			int col = Integer.parseInt(String.valueOf(coord.charAt(1)));
 			
+			//validates board boundaries
 			if (row < boardMatrix.length && col < boardMatrix[row].length) {
 				Object result = boardMatrix[row][col];
 				
+				//already assigned shot
 				if (result instanceof Target) {
 					return (Target) result;
 				} else {

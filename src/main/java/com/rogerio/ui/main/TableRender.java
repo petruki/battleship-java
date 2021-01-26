@@ -11,6 +11,9 @@ import javax.swing.table.TableCellRenderer;
 
 import com.rogerio.model.Target;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 public class TableRender implements TableCellRenderer {
 	
 	public TableRender(JTable table) {
@@ -46,6 +49,9 @@ public class TableRender implements TableCellRenderer {
 		}
 	}
 	
+	/**
+	 * Initialize the render
+	 */
 	public void setupTable(JTable table) {
 		String columnName;
 		for (int i = 0; i < table.getColumnCount(); i++) {

@@ -9,6 +9,9 @@ import com.rogerio.model.Target;
 import com.rogerio.ui.main.TableListener;
 import com.rogerio.ui.main.TableModel;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 @SuppressWarnings("serial")
 public class BoardUI extends JTable {
 	

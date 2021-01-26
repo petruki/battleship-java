@@ -5,6 +5,9 @@ import javax.swing.ImageIcon;
 
 import com.rogerio.util.LoadImage;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 public class Target {
 	
 	public static final String[] CHARS = {"A", "B", "C", "D", "E", "F", "G"};
@@ -19,10 +22,16 @@ public class Target {
 	
 	private Icon icon;
 	
+	/**
+	 * Constructor used when interacting with the board
+	 */
 	public Target(int rowCoord, int colCoord) {
 		this(0, rowCoord, colCoord, null, null);
 	}
 	
+	/**
+	 * Constructor used when onFire is used
+	 */
 	public Target(int shipId, int rowCoord, int colCoord, SlotType slotType, Icon icon) {
 		this.shipId = shipId;
 		this.rowCoord = rowCoord;
@@ -31,6 +40,11 @@ public class Target {
 		this.icon = icon;
 	}
 	
+	/**
+	 * Creates a new target with either miss or hit icon
+	 * 
+	 * @param slot board position id
+	 */
 	public static Target createTarget(int slot, int rowCoord, int colCoord) {
 		if (slot == 0) {
 			return new Target(slot, rowCoord, colCoord, SlotType.MISSED, new ImageIcon(LoadImage.load("miss.png")));

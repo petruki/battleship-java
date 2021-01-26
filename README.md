@@ -2,7 +2,10 @@
 
 ### Battleship Java
 
-Battleship Java is a Desktop Java Swing based game.
+Battleship Java is a simple Java Swing based game app.
+
+![Battleship UI](https://raw.githubusercontent.com/petruki/battleship-java/master/docs/main.jpg)
+
 
 #### Features
 
@@ -22,3 +25,5 @@ Import the project as Maven Project.
 2. Build.
 3. Test again!
 4. Submit your PR.
+
+![Test](https://raw.githubusercontent.com/petruki/battleship-java/master/docs/test.jpg)

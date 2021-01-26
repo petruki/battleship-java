@@ -3,6 +3,9 @@ package com.rogerio.ui.main;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 public class TableModel {
 	
 	private DefaultTableModel tableModel;

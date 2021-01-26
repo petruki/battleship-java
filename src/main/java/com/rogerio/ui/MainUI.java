@@ -15,6 +15,12 @@ import com.rogerio.controller.GameController;
 import com.rogerio.ui.main.TableRender;
 import com.rogerio.util.LoadImage;
 
+/**
+ * This is the App Context, means that the core UI should be centralized here.
+ * All other UIs should use the resources from this object.
+ * 
+ * @author petruki (Roger Floriano)
+ */
 @SuppressWarnings("serial")
 public class MainUI extends JFrame {
 

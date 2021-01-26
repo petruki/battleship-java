@@ -1,5 +1,8 @@
 package com.rogerio.model;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 public class Scoreboard {
 	
 	private int hit;
@@ -14,6 +17,11 @@ public class Scoreboard {
 		this.miss = 0;
 	}
 	
+	/**
+	 * Add a hit and verifies if all target are gone
+	 * 
+	 * @return true if all targets were hit
+	 */
 	public boolean addHit() {
 		this.hit++;
 		this.targets--;
@@ -25,6 +33,9 @@ public class Scoreboard {
 		return false;
 	}
 	
+	/**
+	 * Add a miss to the scoreboard
+	 */
 	public void addMiss() {
 		this.miss++;
 	}

@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.rogerio.model.Target;
 
+/**
+ * @author petruki (Roger Floriano)
+ */
 @SuppressWarnings("serial")
 public class ControlUI extends JPanel {
 	
@@ -76,6 +79,7 @@ public class ControlUI extends JPanel {
 				headerUI.updateScoreUI(false);
 			}
 			
+			//updates the board
 			boardUI.getTableModel().getTableModel().setValueAt(result, result.getRowCoord(), result.getColCoord());
 		} catch (Exception e) {
 			logger.error(e);
