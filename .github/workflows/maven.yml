@@ -2,13 +2,13 @@ name: Maven CI/CD
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, beta ]
   pull_request:
     branches: [ master ]
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
   
     steps:
     - uses: actions/checkout@v2
