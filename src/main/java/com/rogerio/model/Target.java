@@ -9,6 +9,8 @@ public class Target {
 	
 	public static final String[] CHARS = {"A", "B", "C", "D", "E", "F", "G"};
 	
+	private int shipId;
+	
 	private int rowCoord;
 	
 	private int colCoord;
@@ -18,10 +20,11 @@ public class Target {
 	private Icon icon;
 	
 	public Target(int rowCoord, int colCoord) {
-		this(rowCoord, colCoord, null, null);
+		this(0, rowCoord, colCoord, null, null);
 	}
 	
-	public Target(int rowCoord, int colCoord, SlotType slotType, Icon icon) {
+	public Target(int shipId, int rowCoord, int colCoord, SlotType slotType, Icon icon) {
+		this.shipId = shipId;
 		this.rowCoord = rowCoord;
 		this.colCoord = colCoord;
 		this.slotType = slotType;
@@ -30,9 +33,9 @@ public class Target {
 	
 	public static Target createTarget(int slot, int rowCoord, int colCoord) {
 		if (slot == 0) {
-			return new Target(rowCoord, colCoord, SlotType.MISSED, new ImageIcon(LoadImage.load("miss.png")));
+			return new Target(slot, rowCoord, colCoord, SlotType.MISSED, new ImageIcon(LoadImage.load("miss.png")));
 		} else {
-			return new Target(rowCoord, colCoord, SlotType.HIT, new ImageIcon(LoadImage.load("ship.png")));
+			return new Target(slot, rowCoord, colCoord, SlotType.HIT, new ImageIcon(LoadImage.load("ship.png")));
 		}
 	}
 	
@@ -54,6 +57,10 @@ public class Target {
 
 	public Icon getIcon() {
 		return icon;
+	}
+
+	public int getShipId() {
+		return shipId;
 	}
 
 	@Override

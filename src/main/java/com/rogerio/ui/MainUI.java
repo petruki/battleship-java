@@ -24,6 +24,7 @@ public class MainUI extends JFrame {
 	private ControlUI controlUI;
 	private HeaderUI headerUI;
 	private BoardUI boardUI;
+	private ScoreUI scoreUI;
 
 	public MainUI() {
 		buildPanel();
@@ -40,6 +41,7 @@ public class MainUI extends JFrame {
 		controlUI = new ControlUI(this);
 		headerUI = new HeaderUI(this);
 		boardUI = new BoardUI(this);
+		scoreUI = new ScoreUI();
 
 		contentPane = new BackgroundPanel(LoadImage.load("board.jpg"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -50,7 +52,7 @@ public class MainUI extends JFrame {
 		getContentPane().add(boardUI);
 		getContentPane().add(controlUI);
 		getContentPane().add(headerUI);
-		getContentPane().add(new ScoreUI());
+		getContentPane().add(scoreUI);
 		
 		onStartNewGame(null);
 	}
@@ -63,8 +65,9 @@ public class MainUI extends JFrame {
 	}
 	
 	public void onStartNewGame(ActionEvent event) {
-		headerUI.getTxtMessage().setText("");
-		boardUI.setModel(boardUI.getTableModel().getTableModel(gameController.generateMatrix(7, 7, 10)));
+		headerUI.reloadGame();
+		boardUI.setModel(boardUI.getTableModel().getTableModel(gameController.generateMatrix(7, 7, 4, 3)));
+		scoreUI.updateScore(gameController.getScoreBoard());
 		new TableRender(boardUI);
 	}
 
@@ -82,6 +85,10 @@ public class MainUI extends JFrame {
 
 	public BoardUI getBoardUI() {
 		return boardUI;
+	}
+
+	public ScoreUI getScoreUI() {
+		return scoreUI;
 	}
 
 	class BackgroundPanel extends JPanel {

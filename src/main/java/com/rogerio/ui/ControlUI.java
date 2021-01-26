@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.TitledBorder;
 
+import com.rogerio.model.Scoreboard;
 import com.rogerio.model.Target;
 
 @SuppressWarnings("serial")
@@ -55,11 +56,19 @@ public class ControlUI extends JPanel {
 			case HIT:
 				if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
 					context.getHeaderUI().getTxtMessage().setText("Oops, you already hit that location!");
-				else
-					context.getHeaderUI().getTxtMessage().setText("HIT!");
+				else {
+					if (context.getGameController().hasSink(boardUI.getTableModel().getBoard(), result.getShipId())) {
+						context.getHeaderUI().getTxtMessage().setText("You sank my battleship!");
+					} else {
+						context.getHeaderUI().getTxtMessage().setText("HIT!");
+					}
+
+					updateScoreUI(true);
+				}
 				break;
 			case MISSED:
 				context.getHeaderUI().getTxtMessage().setText("You missed.");
+				updateScoreUI(false);
 				break;
 			default:
 				break;
@@ -70,6 +79,23 @@ public class ControlUI extends JPanel {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	public void updateScoreUI(boolean hit) {
+		Scoreboard scoreBoard = context.getGameController().getScoreBoard();
+		
+		if (hit) {
+			if (scoreBoard.addHit()) {
+				context.getHeaderUI().getTimer().cancel();
+				context.getHeaderUI().getTxtMessage()
+					.setText(String.format("You sank all my battleships, in %s guesses.", 
+								scoreBoard.getHit() + scoreBoard.getMiss()));
+			}
+		} else {
+			scoreBoard.addMiss();
+		}
+		
+		context.getScoreUI().updateScore(scoreBoard);
 	}
 
 	public JTextPane getTxtCoordinate() {

@@ -13,6 +13,21 @@ public class Scoreboard {
 		this.hit = 0;
 		this.miss = 0;
 	}
+	
+	public boolean addHit() {
+		this.hit++;
+		this.targets--;
+		
+		if (this.targets == 0) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public void addMiss() {
+		this.miss++;
+	}
 
 	public int getHit() {
 		return hit;

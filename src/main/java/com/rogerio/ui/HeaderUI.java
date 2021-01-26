@@ -2,6 +2,8 @@ package com.rogerio.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -11,8 +13,14 @@ import javax.swing.SwingConstants;
 @SuppressWarnings("serial")
 public class HeaderUI extends JPanel {
 	
+	private JLabel txtTimer;
 	private JLabel txtMessage;
 	private final MainUI context;
+	
+	private Timer timer;
+	private int secs = 0;
+	private int minutes = 0;
+	private String pattern;
 	
 	public HeaderUI(final MainUI context) {
 		this.context = context;
@@ -30,7 +38,7 @@ public class HeaderUI extends JPanel {
 		txtMessage.setBounds(10, 11, 388, 24);
 		add(txtMessage);
 
-		JLabel txtTimer = new JLabel("0:00");
+		txtTimer = new JLabel("0:00");
 		txtTimer.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTimer.setForeground(Color.WHITE);
 		txtTimer.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -44,6 +52,43 @@ public class HeaderUI extends JPanel {
 		btnReload.setFocusable(false);
 		btnReload.addActionListener(context::onStartNewGame);
 		add(btnReload);
+	}
+	
+	public void reloadGame() {
+		txtTimer.setText("0:00");
+		txtMessage.setText("");
+		
+		TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+            	updateTxtTimer();
+            }
+        };
+        
+        if (timer != null) {
+        	timer.cancel();
+        	secs = 0;
+        	minutes = 0;
+        }
+        
+       	timer = new Timer();
+    	timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+    }
+	
+	private void updateTxtTimer() {
+		pattern = "%s:0%s";
+		if (++secs == 60) {
+			secs = 0;
+			minutes++;
+		} else if (secs > 9) {
+			pattern = "%s:%s";
+		}
+
+		txtTimer.setText(String.format(pattern, minutes, secs));
+	}
+
+	public Timer getTimer() {
+		return timer;
 	}
 
 	public JLabel getTxtMessage() {

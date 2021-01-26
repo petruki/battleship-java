@@ -9,8 +9,13 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import com.rogerio.model.Scoreboard;
+
 @SuppressWarnings("serial")
 public class ScoreUI extends JPanel {
+	
+	private JTextPane txtScoreHit;
+	private JTextPane txtScoreMissed;
 	
 	public ScoreUI() {
 		buildPanel();
@@ -36,17 +41,22 @@ public class ScoreUI extends JPanel {
 		lblMissed.setBounds(10, 81, 110, 14);
 		add(lblMissed);
 
-		JTextPane txtScoreHit = new JTextPane();
+		txtScoreHit = new JTextPane();
 		txtScoreHit.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtScoreHit.setEditable(false);
 		txtScoreHit.setBounds(10, 36, 110, 23);
 		add(txtScoreHit);
 
-		JTextPane txtScoreMissed = new JTextPane();
+		txtScoreMissed = new JTextPane();
 		txtScoreMissed.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		txtScoreMissed.setEditable(false);
 		txtScoreMissed.setBounds(10, 106, 110, 23);
 		add(txtScoreMissed);
+	}
+	
+	public void updateScore(Scoreboard scoreBoard) {
+		txtScoreHit.setText(String.valueOf(scoreBoard.getHit()));
+		txtScoreMissed.setText(String.valueOf(scoreBoard.getMiss()));
 	}
 
 }
