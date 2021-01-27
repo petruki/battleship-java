@@ -118,12 +118,12 @@ public class GameControllerTest {
 		geberateFixture();
 		
 		//test - overlap existing ship
-		assertTrue(gameController.hasCollided(fixture1, 2, 3, 3, 5, false));
-		assertTrue(gameController.hasCollided(fixture1, 3, 2, 3, 5, true));
+		assertTrue(gameController.hasCollided(fixture1, 2, 3, 3, false));
+		assertTrue(gameController.hasCollided(fixture1, 3, 2, 3, true));
 		
 		//test - exceed board length
-		assertTrue(gameController.hasCollided(fixture1, 0, 5, 3, 5, false));
-		assertTrue(gameController.hasCollided(fixture1, 6, 6, 3, 5, true));
+		assertTrue(gameController.hasCollided(fixture1, 0, 5, 3, false));
+		assertTrue(gameController.hasCollided(fixture1, 6, 6, 3, true));
 	}
 	
 	@Test
@@ -132,10 +132,10 @@ public class GameControllerTest {
 		geberateFixture();
 		
 		//test
-		assertFalse(gameController.hasCollided(fixture1, 0, 4, 3, 5, false));
-		assertFalse(gameController.hasCollided(fixture1, 0, 4, 3, 5, true));
-		assertFalse(gameController.hasCollided(fixture1, 0, 5, 3, 5, true));
-		assertFalse(gameController.hasCollided(fixture1, 6, 0, 3, 5, false));
+		assertFalse(gameController.hasCollided(fixture1, 0, 4, 3, false));
+		assertFalse(gameController.hasCollided(fixture1, 0, 4, 3, true));
+		assertFalse(gameController.hasCollided(fixture1, 0, 5, 3, true));
+		assertFalse(gameController.hasCollided(fixture1, 6, 0, 3, false));
 	}
 	
 	@Test

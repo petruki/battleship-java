@@ -19,7 +19,7 @@ public abstract class TableListener extends MouseAdapter {
 	}
 	
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mouseReleased(MouseEvent e) {
 		boardSelected(new Target(table.getSelectedRow(), table.getSelectedColumn()));
 	}
 	

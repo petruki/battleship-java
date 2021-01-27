@@ -35,8 +35,8 @@ public class GameController {
 		
 		//initialize board
 		while (ships != 0) {
-			randomRow = random.nextInt(rows) + 0;
-			randomColumn = random.nextInt(columns) + 0;
+			randomRow = random.nextInt(rows);
+			randomColumn = random.nextInt(columns);
 			
 			if (Integer.parseInt(matrix[randomRow][randomColumn].toString()) == 0) {
 				if (!addShip(matrix, randomRow, randomColumn, shipSize, ships--)) {
@@ -66,7 +66,7 @@ public class GameController {
 			int randomColumn, int shipSize, int shipId) {
 		boolean vertical = Math.random() > 0.5;
 		
-		if (!hasCollided(matrix, randomRow, randomColumn, shipSize, shipId, vertical)) {
+		if (!hasCollided(matrix, randomRow, randomColumn, shipSize, vertical)) {
 			matrix[randomRow][randomColumn] = shipId;
 			if (vertical) {
 				for (int i = 0; i < shipSize; i++) {
@@ -88,7 +88,7 @@ public class GameController {
 	 * @return return true if it collides
 	 */
 	public boolean hasCollided(Object[][] matrix, int randomRow, 
-			int randomColumn, int shipSize, int shipId, boolean vertical) {
+			int randomColumn, int shipSize, boolean vertical) {
 		if (vertical) {
 			for (int i = 0, row = randomRow; i < shipSize; i++, row++) {
 				if (row >= matrix.length || Integer.parseInt(matrix[row][randomColumn].toString()) != 0)
@@ -108,9 +108,11 @@ public class GameController {
 	 * Validates if ship has been sank
 	 */
 	public boolean hasSink(Object[][] matrix, Object shipId) {
-		for (Object[] row : matrix) {
-			if (Arrays.stream(row).filter(r -> r.equals(shipId)).count() > 0)
-				return false;
+		for (Object[] rows : matrix) {
+			for (Object cell : rows) {
+				if (cell.equals(shipId))
+					return false;
+			}
 		}
 		return true;
 	}
