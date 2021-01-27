@@ -12,12 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.rogerio.controller.GameController;
-import com.rogerio.ui.main.TableRender;
 import com.rogerio.util.LoadImage;
 
 /**
- * This is the App Context, means that the core UI should be centralized here.
- * All other UIs should use the resources from this object.
+ * This is the App Context which handles all other UI objects.
  * 
  * @author petruki (Roger Floriano)
  */
@@ -25,7 +23,6 @@ import com.rogerio.util.LoadImage;
 public class MainUI extends JFrame {
 
 	private GameController gameController;
-	private BackgroundPanel contentPane;
 
 	private ControlUI controlUI;
 	private HeaderUI headerUI;
@@ -54,7 +51,7 @@ public class MainUI extends JFrame {
 		boardUI = new BoardUI(this);
 		scoreUI = new ScoreUI();
 
-		contentPane = new BackgroundPanel(LoadImage.load("board.jpg"));
+		BackgroundPanel contentPane = new BackgroundPanel(LoadImage.load("board.jpg"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
@@ -79,9 +76,8 @@ public class MainUI extends JFrame {
 		Object[][] matrix = gameController.generateMatrix(7, 7, ships, shipSize);
 		
 		headerUI.reloadGame();
-		boardUI.setModel(boardUI.getTableModel().getTableModel(matrix));
+		boardUI.setBoard(matrix);
 		scoreUI.updateScore(gameController.getScoreBoard());
-		new TableRender(boardUI);
 	}
 
 	public GameController getGameController() {

@@ -6,8 +6,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import com.rogerio.model.Target;
-import com.rogerio.ui.main.TableListener;
-import com.rogerio.ui.main.TableModel;
+import com.rogerio.ui.board.TableListener;
+import com.rogerio.ui.board.TableModel;
+import com.rogerio.ui.board.TableRender;
 
 /**
  * @author petruki (Roger Floriano)
@@ -31,6 +32,7 @@ public class BoardUI extends JTable {
 		setBackground(new Color(0, 0, 0, 0));
 		setShowGrid(false);
 		setOpaque(false);
+
 		
 		initTableListener();
 	}
@@ -39,13 +41,22 @@ public class BoardUI extends JTable {
 		addMouseListener(new TableListener(this) {
 			@Override
 			public void boardSelected(Target target) {
-				context.getControlUI().getTxtCoordinate().setText(target.getCoord());
+				context.getControlUI().updateCoordinates(target.getCoord());
 			}
 		});
 	}
+	
+	public void setBoard(Object[][] matrix) {
+		setModel(tableModel.getTableModel(matrix));
+		new TableRender(this);
+	}
 
-	public TableModel getTableModel() {
-		return tableModel;
+	public Object[][] getBoard() {
+		return tableModel.getBoard();
+	}
+	
+	public void updateBoard(Object value, int row, int column) {
+		tableModel.getTableModel().setValueAt(value, row, column);
 	}
 
 }

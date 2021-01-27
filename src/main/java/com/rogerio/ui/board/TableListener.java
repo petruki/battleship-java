@@ -1,4 +1,4 @@
-package com.rogerio.ui.main;
+package com.rogerio.ui.board;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

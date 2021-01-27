@@ -37,21 +37,23 @@ public class HeaderUI extends JPanel {
 		setBounds(0, 0, 1018, 46);
 		setLayout(null);
 
+		final Font labelFont = new Font("Tahoma", Font.PLAIN, 18);
+		
 		txtMessage = new JLabel();
-		txtMessage.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		txtMessage.setForeground(new Color(255, 255, 255));
+		txtMessage.setFont(labelFont);
+		txtMessage.setForeground(Color.WHITE);
 		txtMessage.setBounds(10, 11, 388, 24);
 		add(txtMessage);
 
 		txtTimer = new JLabel("0:00");
 		txtTimer.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTimer.setForeground(Color.WHITE);
-		txtTimer.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtTimer.setFont(labelFont);
 		txtTimer.setBounds(471, 11, 68, 24);
 		add(txtTimer);
 
 		JButton btnReload = new JButton("Reload");
-		btnReload.setForeground(new Color(255, 255, 255));
+		btnReload.setForeground(Color.WHITE);
 		btnReload.setBackground(new Color(0, 128, 0));
 		btnReload.setBounds(903, 10, 87, 30);
 		btnReload.setFocusable(false);

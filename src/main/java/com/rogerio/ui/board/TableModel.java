@@ -1,4 +1,4 @@
-package com.rogerio.ui.main;
+package com.rogerio.ui.board;
 
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;

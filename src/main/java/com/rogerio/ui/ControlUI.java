@@ -13,6 +13,7 @@ import javax.swing.border.TitledBorder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rogerio.model.SlotType;
 import com.rogerio.model.Target;
 
 /**
@@ -58,38 +59,44 @@ public class ControlUI extends JPanel {
 			final HeaderUI headerUI = context.getHeaderUI();
 			final Target result = context
 					.getGameController()
-					.onFire(boardUI.getTableModel().getBoard(), txtCoordinate.getText());
+					.onFire(boardUI.getBoard(), txtCoordinate.getText());
 			
-			switch (result.getSlotType()) {
-			case HIT:
-				if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
-					headerUI.updateText("Oops, you already hit that location!");
-				else {
-					if (context.getGameController().hasSink(boardUI.getTableModel().getBoard(), result.getShipId())) {
-						headerUI.updateText("You sank my battleship!");
-					} else {
-						headerUI.updateText("HIT!");
-					}
-
-					headerUI.updateScoreUI(true);
-				}
-				break;
-			case MISSED:
-				headerUI.updateText("You missed.");
-				headerUI.updateScoreUI(false);
+			if (result.getSlotType() == SlotType.HIT) {
+				onHit(boardUI, headerUI, result);
+			} else {
+				onMiss(headerUI);
 			}
 			
 			//updates the board
-			boardUI.getTableModel().getTableModel().setValueAt(result, result.getRowCoord(), result.getColCoord());
+			boardUI.updateBoard(result, result.getRowCoord(), result.getColCoord());
 		} catch (Exception e) {
 			logger.error(e);
 			if (event != null)
 				JOptionPane.showMessageDialog(context, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	private void onHit(final BoardUI boardUI, final HeaderUI headerUI, final Target result) {
+		if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
+			headerUI.updateText("Oops, you already hit that location!");
+		else {
+			if (context.getGameController().hasSink(boardUI.getBoard(), result.getShipId())) {
+				headerUI.updateText("You sank my battleship!");
+			} else {
+				headerUI.updateText("HIT!");
+			}
 
-	public JTextPane getTxtCoordinate() {
-		return txtCoordinate;
+			headerUI.updateScoreUI(true);
+		}
+	}
+
+	private void onMiss(final HeaderUI headerUI) {
+		headerUI.updateText("You missed.");
+		headerUI.updateScoreUI(false);
+	}
+	
+	public void updateCoordinates(String coordinates) {
+		txtCoordinate.setText(coordinates);
 	}
 
 }

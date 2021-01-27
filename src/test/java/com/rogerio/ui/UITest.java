@@ -28,7 +28,7 @@ public class UITest {
 			for (int j = 0; j < matrix[i].length; j++) {
 				//selecting the target
 				if (Integer.parseInt(matrix[i][j].toString()) == find) {
-					context.getControlUI().getTxtCoordinate().setText(new Target(i, j).getCoord());
+					context.getControlUI().updateCoordinates(new Target(i, j).getCoord());
 				}
 			}
 		}
@@ -37,7 +37,7 @@ public class UITest {
 	@Test
 	public void shouldHit() {
 		//find ship to hit
-		Object[][] matrix = context.getBoardUI().getTableModel().getBoard();
+		Object[][] matrix = context.getBoardUI().getBoard();
 		selectingTarget(matrix, 1);
 		
 		//fire!
@@ -50,7 +50,7 @@ public class UITest {
 	@Test
 	public void shouldMiss() {
 		//find ship to hit
-		Object[][] matrix = context.getBoardUI().getTableModel().getBoard();
+		Object[][] matrix = context.getBoardUI().getBoard();
 		selectingTarget(matrix, 0);
 		
 		//fire!
@@ -63,7 +63,7 @@ public class UITest {
 	@Test
 	public void shouldHitAgain() {
 		//find ship to hit
-		Object[][] matrix = context.getBoardUI().getTableModel().getBoard();
+		Object[][] matrix = context.getBoardUI().getBoard();
 		selectingTarget(matrix, 1);
 		
 		//fire!
@@ -75,17 +75,17 @@ public class UITest {
 	}
 	
 	@Test
-	public void shouldSankShip() {
+	public void shouldSinkShip() {
 		//find ship to hit
-		Object[][] matrix = context.getBoardUI().getTableModel().getBoard();
+		Object[][] matrix = context.getBoardUI().getBoard();
 		selectingTarget(matrix, 1);
 		context.getControlUI().onFire(null);
 		
-		matrix = context.getBoardUI().getTableModel().getBoard();
+		matrix = context.getBoardUI().getBoard();
 		selectingTarget(matrix, 1);
 		context.getControlUI().onFire(null);
 		
-		matrix = context.getBoardUI().getTableModel().getBoard();
+		matrix = context.getBoardUI().getBoard();
 		selectingTarget(matrix, 1);
 		context.getControlUI().onFire(null);
 		
