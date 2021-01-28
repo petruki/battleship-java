@@ -43,6 +43,12 @@ public class BoardUI extends JTable {
 			public void boardSelected(Target target) {
 				context.getControlUI().updateCoordinates(target.getCoord());
 			}
+
+			@Override
+			public void boardSelecetedAndFire(Target target) {
+				context.getControlUI().updateCoordinates(target.getCoord());
+				context.getControlUI().onFire(null);
+			}
 		});
 	}
 	

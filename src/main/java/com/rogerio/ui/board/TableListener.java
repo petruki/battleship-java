@@ -23,6 +23,14 @@ public abstract class TableListener extends MouseAdapter {
 		boardSelected(new Target(table.getSelectedRow(), table.getSelectedColumn()));
 	}
 	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
+			boardSelecetedAndFire(new Target(table.getSelectedRow(), table.getSelectedColumn()));
+	}
+	
 	public abstract void boardSelected(Target target);
+	
+	public abstract void boardSelecetedAndFire(Target target);
 
 }

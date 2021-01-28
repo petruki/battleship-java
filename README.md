@@ -12,7 +12,7 @@ Battleship Java is a simple Java Swing based game app.
 - Know how much time has left
 - Easy game reload
 - Scoreboard
-- Board selection. Click on the table and hit fire!
+- Interactive board. Click and hit fire or Double-click to fire!
 
 
 #### Import to IDE

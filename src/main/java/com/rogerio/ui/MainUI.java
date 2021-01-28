@@ -40,6 +40,7 @@ public class MainUI extends JFrame {
 	
 	private void buildPanel() {
 		setTitle("Battleship Java");
+		setIconImage(LoadImage.load("ship.png"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 880);
 		setResizable(false);

@@ -21,7 +21,7 @@ public class GameControllerTest {
 		gameController = new GameController();
 	}
 	
-	private void geberateFixture() {
+	private void generateFixture() {
 		fixture1 = new Object[][] {
 			{0, 1, 1, 1, 0, 0, 0},
 			{0, 2, 0, 0, 0, 0, 0},
@@ -56,7 +56,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldMiss() throws Exception {
 		//given
-		geberateFixture();
+		generateFixture();
 		
 		//test
 		Target target = gameController.onFire(fixture1, "A0");
@@ -66,7 +66,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldHit() throws Exception {
 		//given
-		geberateFixture();
+		generateFixture();
 		
 		//test
 		Target target = gameController.onFire(fixture1, "A1");
@@ -76,7 +76,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldMarkAsHit() throws Exception {
 		//given
-		geberateFixture();
+		generateFixture();
 		
 		//test
 		gameController.onFire(fixture1, "A1");
@@ -86,7 +86,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldAddNewShip() {
 		//given
-		geberateFixture();
+		generateFixture();
 		
 		//test
 		assertTrue(gameController.addShip(fixture1, 0, 4, 3, 5));
@@ -106,7 +106,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldNotAddNewShip() {
 		//given
-		geberateFixture();
+		generateFixture();
 		
 		//test
 		assertFalse(gameController.addShip(fixture1, 0, 1, 3, 5));
@@ -115,7 +115,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldCollide() {
 		//given
-		geberateFixture();
+		generateFixture();
 		
 		//test - overlap existing ship
 		assertTrue(gameController.hasCollided(fixture1, 2, 3, 3, false));
@@ -129,7 +129,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldNotCollide() {
 		//given
-		geberateFixture();
+		generateFixture();
 		
 		//test
 		assertFalse(gameController.hasCollided(fixture1, 0, 4, 3, false));
@@ -141,7 +141,7 @@ public class GameControllerTest {
 	@Test
 	public void shouldSinkShip() throws Exception {
 		//given
-		geberateFixture();
+		generateFixture();
 
 		//test
 		gameController.onFire(fixture1, "A1");
@@ -154,7 +154,7 @@ public class GameControllerTest {
 	@Test(expected = Exception.class)
 	public void shouldReturnError() throws Exception {
 		//given
-		geberateFixture();
+		generateFixture();
 
 		//test
 		gameController.onFire(fixture1, "A9");

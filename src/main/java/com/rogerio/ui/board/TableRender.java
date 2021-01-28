@@ -31,11 +31,9 @@ public class TableRender implements TableCellRenderer {
 		if (isSelected && hasFocus) {
 			cell.setOpaque(true);
 			cell.setBackground(new Color(0, 255, 0, 80));
-			setIcon(cell, table, row, column, isSelected);
-		} else {
-			setIcon(cell, table, row, column, isSelected);
 		}
 		
+		setIcon(cell, table, row, column, isSelected);
 		return cell;
 	}
 	
