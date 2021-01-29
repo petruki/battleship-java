@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.rogerio.controller.GameController;
+import com.rogerio.model.Scoreboard;
 import com.rogerio.util.LoadImage;
 
 /**
@@ -24,10 +25,12 @@ public class MainUI extends JFrame {
 
 	private GameController gameController;
 
+	private BackgroundPanel contentPane;
 	private ControlUI controlUI;
 	private HeaderUI headerUI;
 	private BoardUI boardUI;
 	private ScoreUI scoreUI;
+	private EndGameScoreUI endGameScoreUI;
 	
 	private int ships;
 	private int shipSize;
@@ -51,8 +54,9 @@ public class MainUI extends JFrame {
 		headerUI = new HeaderUI(this);
 		boardUI = new BoardUI(this);
 		scoreUI = new ScoreUI();
+		endGameScoreUI = new EndGameScoreUI();
 
-		BackgroundPanel contentPane = new BackgroundPanel(LoadImage.load("board.jpg"));
+		contentPane = new BackgroundPanel(LoadImage.load("board.jpg"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
@@ -62,6 +66,7 @@ public class MainUI extends JFrame {
 		getContentPane().add(controlUI);
 		getContentPane().add(headerUI);
 		getContentPane().add(scoreUI);
+		getContentPane().add(endGameScoreUI);
 		
 		onStartNewGame(null);
 	}
@@ -74,11 +79,30 @@ public class MainUI extends JFrame {
 	}
 	
 	public void onStartNewGame(ActionEvent event) {
+		endGameScoreUI.setVisible(false);
+		boardUI.setVisible(true);
+		controlUI.setVisible(true);
+		scoreUI.setVisible(true);
+		
+		contentPane.setBackground(LoadImage.load("board.jpg"));
+		
 		Object[][] matrix = gameController.generateMatrix(7, 7, ships, shipSize);
 		
 		headerUI.reloadGame();
 		boardUI.setBoard(matrix);
 		scoreUI.updateScore(gameController.getScoreBoard());
+	}
+	
+	public void onGameFinished(Scoreboard scoreBoard) {
+		if ((scoreBoard.getHit() - scoreBoard.getMiss()) > 0)
+			contentPane.setBackground(LoadImage.load("board_end.png"));
+		else
+			contentPane.setBackground(LoadImage.load("board_gameover.png"));
+		
+		endGameScoreUI.showScore(scoreBoard);
+		boardUI.setVisible(false);
+		controlUI.setVisible(false);
+		scoreUI.setVisible(false);
 	}
 
 	public GameController getGameController() {
@@ -114,5 +138,11 @@ public class MainUI extends JFrame {
 			super.paintComponent(g);
 			g.drawImage(background, 0, 0, this);
 		}
+
+		public void setBackground(Image background) {
+			this.background = background;
+			MainUI.this.repaint();
+		}
+		
 	}
 }

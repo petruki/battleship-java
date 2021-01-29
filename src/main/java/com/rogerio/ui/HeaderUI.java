@@ -79,6 +79,7 @@ public class HeaderUI extends JPanel {
 		if (hit) {
 			if (scoreBoard.addHit()) {
 				timer.cancel();
+				context.onGameFinished(scoreBoard);
 				txtMessage.setText(
 						String.format("You sank all my battleships, in %s guesses.", 
 								scoreBoard.getHit() + scoreBoard.getMiss()));
