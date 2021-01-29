@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rogerio.ui.MainUI;
+import com.rogerio.util.ResourcesCache;
 
 /**
  * @author petruki (Roger Floriano)
@@ -23,6 +24,7 @@ public class GameInitializer {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ResourcesCache.getInstance().initializeImages();
 					MainUI frame = new MainUI(SHIPS, SHIP_SIZE);
 					frame.setVisible(true);
 				} catch (Exception e) {

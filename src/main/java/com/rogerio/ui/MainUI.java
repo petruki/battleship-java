@@ -14,6 +14,8 @@ import javax.swing.border.EmptyBorder;
 import com.rogerio.controller.GameController;
 import com.rogerio.model.Scoreboard;
 import com.rogerio.util.LoadImage;
+import com.rogerio.util.ResourceConstants;
+import com.rogerio.util.ResourcesCache;
 
 /**
  * This is the App Context which handles all other UI objects.
@@ -42,7 +44,7 @@ public class MainUI extends JFrame {
 	}
 	
 	private void buildPanel() {
-		setTitle("Battleship Java");
+		setTitle("Battleship Java - v1.0.4");
 		setIconImage(LoadImage.load("ship.png"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 880);
@@ -56,7 +58,8 @@ public class MainUI extends JFrame {
 		scoreUI = new ScoreUI();
 		endGameScoreUI = new EndGameScoreUI();
 
-		contentPane = new BackgroundPanel(LoadImage.load("board.jpg"));
+		contentPane = new BackgroundPanel(
+				ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
@@ -84,7 +87,7 @@ public class MainUI extends JFrame {
 		controlUI.setVisible(true);
 		scoreUI.setVisible(true);
 		
-		contentPane.setBackground(LoadImage.load("board.jpg"));
+		contentPane.setBackground(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD));
 		
 		Object[][] matrix = gameController.generateMatrix(7, 7, ships, shipSize);
 		
@@ -94,11 +97,14 @@ public class MainUI extends JFrame {
 	}
 	
 	public void onGameFinished(Scoreboard scoreBoard) {
-		if ((scoreBoard.getHit() - scoreBoard.getMiss()) > 0)
-			contentPane.setBackground(LoadImage.load("board_end.png"));
-		else
-			contentPane.setBackground(LoadImage.load("board_gameover.png"));
-		
+		if ((scoreBoard.getHit() - scoreBoard.getMiss()) > 0) {
+			contentPane.setBackground(
+					ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_END_GOOD));
+		} else {
+			contentPane.setBackground(
+					ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_END_BAD));
+		}
+			
 		endGameScoreUI.showScore(scoreBoard);
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);

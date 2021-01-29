@@ -3,7 +3,8 @@ package com.rogerio.model;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.rogerio.util.LoadImage;
+import com.rogerio.util.ResourceConstants;
+import com.rogerio.util.ResourcesCache;
 
 /**
  * @author petruki (Roger Floriano)
@@ -47,9 +48,11 @@ public class Target {
 	 */
 	public static Target createTarget(int slot, int rowCoord, int colCoord) {
 		if (slot == 0) {
-			return new Target(slot, rowCoord, colCoord, SlotType.MISSED, new ImageIcon(LoadImage.load("miss.png")));
+			return new Target(slot, rowCoord, colCoord, SlotType.MISSED, 
+					new ImageIcon(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_MISS)));
 		} else {
-			return new Target(slot, rowCoord, colCoord, SlotType.HIT, new ImageIcon(LoadImage.load("ship.png")));
+			return new Target(slot, rowCoord, colCoord, SlotType.HIT, 
+					new ImageIcon(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT)));
 		}
 	}
 	

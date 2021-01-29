@@ -8,8 +8,6 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rogerio.ui.MainUI;
-
 public class LoadImage {
 	
 	private static final Logger logger = LogManager.getLogger(LoadImage.class);
@@ -21,7 +19,12 @@ public class LoadImage {
 	 */
 	public static BufferedImage load(String image) {
 		try {
-			return ImageIO.read(MainUI.class.getClassLoader().getResource(image));
+			//print generated board
+			if (logger.isDebugEnabled()) {
+				logger.info(image);
+			}
+			
+			return ImageIO.read(LoadImage.class.getClassLoader().getResource(image));
 		} catch (Exception e) {
 			logger.error(e);
 			JOptionPane.showMessageDialog(null, String.format(IMAGE_ERROR, image), "Error", JOptionPane.ERROR_MESSAGE);
