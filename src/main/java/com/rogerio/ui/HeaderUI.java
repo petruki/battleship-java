@@ -21,14 +21,16 @@ public class HeaderUI extends JPanel {
 	private JLabel txtTimer;
 	private JLabel txtMessage;
 	private final MainUI context;
+	private final String timeLimit;
 	
 	private Timer timer;
 	private int secs = 0;
 	private int minutes = 0;
 	private String pattern;
 	
-	public HeaderUI(final MainUI context) {
+	public HeaderUI(final MainUI context, final String timeLimit) {
 		this.context = context;
+		this.timeLimit = timeLimit;
 		buildPanel();
 	}
 	
@@ -68,6 +70,10 @@ public class HeaderUI extends JPanel {
 			minutes++;
 		} else if (secs > 9) {
 			pattern = "%s:%s";
+		}
+		
+		if (timeLimit.equals(String.format(pattern, minutes, secs))) {
+			context.onGameFinished(context.getGameController().getScoreBoard());
 		}
 
 		txtTimer.setText(String.format(pattern, minutes, secs));

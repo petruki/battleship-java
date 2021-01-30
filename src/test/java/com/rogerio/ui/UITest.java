@@ -14,7 +14,7 @@ public class UITest {
 	
 	@Before
 	public void setup() {
-		context = new MainUI(4, 3);
+		context = new MainUI(4, 3, "1:00");
 	}
 	
 	@Test

@@ -13,7 +13,6 @@ import javax.swing.border.EmptyBorder;
 
 import com.rogerio.controller.GameController;
 import com.rogerio.model.Scoreboard;
-import com.rogerio.util.LoadImage;
 import com.rogerio.util.ResourceConstants;
 import com.rogerio.util.ResourcesCache;
 
@@ -36,16 +35,18 @@ public class MainUI extends JFrame {
 	
 	private int ships;
 	private int shipSize;
+	private String timeLimit;
 
-	public MainUI(int ships, int shipSize) {
+	public MainUI(int ships, int shipSize, String timeLimit) {
 		this.ships = ships;
 		this.shipSize = shipSize;
+		this.timeLimit = timeLimit;
 		buildPanel();
 	}
 	
 	private void buildPanel() {
-		setTitle("Battleship Java - v1.0.4");
-		setIconImage(LoadImage.load("ship.png"));
+		setTitle("Battleship Java - v1.0.5");
+		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 880);
 		setResizable(false);
@@ -53,7 +54,7 @@ public class MainUI extends JFrame {
 		
 		gameController = new GameController();
 		controlUI = new ControlUI(this);
-		headerUI = new HeaderUI(this);
+		headerUI = new HeaderUI(this, timeLimit);
 		boardUI = new BoardUI(this);
 		scoreUI = new ScoreUI();
 		endGameScoreUI = new EndGameScoreUI();
@@ -104,11 +105,12 @@ public class MainUI extends JFrame {
 			contentPane.setBackground(
 					ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_END_BAD));
 		}
-			
+		
 		endGameScoreUI.showScore(scoreBoard);
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
+		headerUI.getTimer().cancel();
 	}
 
 	public GameController getGameController() {

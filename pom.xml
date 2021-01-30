@@ -5,7 +5,7 @@
 
 	<groupId>com.rogerio</groupId>
 	<artifactId>battleship-java</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.5</version>
 	<name>Battleship Java</name>
 
 	<properties>
@@ -13,6 +13,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 
+		<miglayout.version>3.7.4</miglayout.version>
 		<log4j.version>2.13.3</log4j.version>
 		<junit.version>5.4.0</junit.version>
 	</properties>
@@ -31,6 +32,12 @@
 	</scm>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout</artifactId>
+			<version>${miglayout.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>

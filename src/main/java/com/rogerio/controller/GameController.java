@@ -68,12 +68,10 @@ public class GameController {
 		
 		if (!hasCollided(matrix, randomRow, randomColumn, shipSize, vertical)) {
 			matrix[randomRow][randomColumn] = shipId;
-			if (vertical) {
-				for (int i = 0; i < shipSize; i++) {
+			for (int i = 0; i < shipSize; i++) {
+				if (vertical) {
 					matrix[randomRow++][randomColumn] = shipId;
-				}
-			} else {
-				for (int i = 0; i < shipSize; i++) {
+				} else {
 					matrix[randomRow][randomColumn++] = shipId;
 				}
 			}
