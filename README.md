@@ -4,6 +4,9 @@
 
 Battleship Java is a simple Java Swing based game app.
 
+ - Sink ships give you extra point
+ - Miss 3 times give you the radar power up for 5 seconds
+
 ![Battleship UI](https://raw.githubusercontent.com/petruki/battleship-java/master/docs/main.jpg)
 
 

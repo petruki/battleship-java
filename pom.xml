@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.rogerio</groupId>
+	<groupId>com.github.petruki.battleship</groupId>
 	<artifactId>battleship-java</artifactId>
 	<version>1.0.5</version>
 	<name>Battleship Java</name>
@@ -70,7 +70,7 @@
 								<addClasspath>true</addClasspath>
 								<classpathPrefix>libs/</classpathPrefix>
 								<mainClass>
-									com.rogerio.GameInitializer
+									com.github.petruki.battleship.GameInitializer
 								</mainClass>
 							</manifest>
 						</archive>
@@ -89,7 +89,7 @@
 					<configuration>
 						<archive>
 							<manifest>
-								<mainClass>com.rogerio.GameInitializer</mainClass>
+								<mainClass>com.github.petruki.battleship.GameInitializer</mainClass>
 							</manifest>
 						</archive>
 						<descriptorRefs>
@@ -103,8 +103,8 @@
 					<version>2.17</version>
 					<configuration>
 						<excludes>
-							<exclude>**/com/rogerio/ui/UITest.java</exclude>
-							<exclude>**/com/rogerio/TestSuite.java</exclude>
+							<exclude>**/com/github/petruki/battleship/ui/UITest.java</exclude>
+							<exclude>**/com/github/petruki/battleship/TestSuite.java</exclude>
 						</excludes>
 					</configuration>
 				</plugin>
