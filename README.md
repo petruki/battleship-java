@@ -13,6 +13,8 @@ Battleship Java is a simple Java Swing based game app.
 - Easy game reload
 - Scoreboard
 - Interactive board. Click and hit fire or Double-click to fire!
+- Custom settings
+- Radar power up!
 
 
 #### Import to IDE

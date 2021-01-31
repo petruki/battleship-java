@@ -6,12 +6,14 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rogerio.ui.GameSettingsDialog;
 import com.rogerio.ui.MainUI;
+import com.rogerio.ui.dialog.GameSettingsDialog;
 import com.rogerio.util.ResourcesCache;
 
 /**
@@ -25,6 +27,7 @@ public class GameInitializer {
 	public static final int SHIP_SIZE = 3;
 
 	public static void main(String[] args) {
+		setupNimbus();
 		setupGame();
 	}
 	
@@ -32,10 +35,6 @@ public class GameInitializer {
 		GameSettingsDialog gameSettings = new GameSettingsDialog();
 		gameSettings.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		gameSettings.setVisible(true);
-		
-		gameSettings.setDefaultCloseOperation(
-			    JDialog.DISPOSE_ON_CLOSE);
-		
 		gameSettings.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosed(WindowEvent e) {
@@ -62,6 +61,19 @@ public class GameInitializer {
 				}
 			}
 		});
+	}
+	
+	private static void setupNimbus() {
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+			logger.error(e);
+		}
 	}
 
 }

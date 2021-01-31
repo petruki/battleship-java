@@ -1,8 +1,10 @@
-package com.rogerio.ui;
+package com.rogerio.ui.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,13 +25,17 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings("serial")
 public class GameSettingsDialog extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
-	private final JComboBox<Integer> comboShips;
-	private final JComboBox<Integer> comboShipSize;
-	private final JComboBox<String> comboTimeLimit;
+	private JPanel contentPanel = new JPanel();
+	private JComboBox<Integer> comboShips;
+	private JComboBox<Integer> comboShipSize;
+	private JComboBox<String> comboTimeLimit;
 	private boolean startGame = false;
 	
 	public GameSettingsDialog() {
+		buildPanel();
+	}
+	
+	private void buildPanel() {
 		setTitle("Battleship Settings");
 		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
 		setBounds(100, 100, 225, 179);
@@ -68,13 +74,14 @@ public class GameSettingsDialog extends JDialog {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
-		JButton okButton = new JButton("Start");
-		okButton.setActionCommand("OK");
+		JButton okButton = new JButton("Apply");
 		buttonPane.add(okButton);
+		okButton.setForeground(new Color(255, 255, 255));
+		okButton.setBackground(new Color(128, 0, 0));
+		okButton.setFont(new Font("Tahoma", Font.BOLD, 18));
 		getRootPane().setDefaultButton(okButton);
 		
 		okButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				startGame = true;

@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
 
 import com.rogerio.model.Scoreboard;
 
@@ -26,7 +25,6 @@ public class ScoreUI extends JPanel {
 	
 	private void buildPanel() {
 		setLayout(null);
-		setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setBackground(new Color(83, 175, 19));
 		setBounds(864, 207, 130, 144);
 

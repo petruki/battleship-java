@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import com.rogerio.controller.GameController;
 import com.rogerio.model.Target;
 
 /**
@@ -16,7 +17,10 @@ import com.rogerio.model.Target;
  */
 public class TableRender implements TableCellRenderer {
 	
-	public TableRender(JTable table) {
+	private final GameController gameController;
+	
+	public TableRender(JTable table, GameController gameController) {
+		this.gameController = gameController;
 		setupTable(table);
 	}
 	
@@ -31,6 +35,10 @@ public class TableRender implements TableCellRenderer {
 		if (isSelected && hasFocus) {
 			cell.setOpaque(true);
 			cell.setBackground(new Color(0, 255, 0, 80));
+			
+			if (!value.toString().equals("0") && gameController.isRadarActivated()) {
+				cell.setBackground(new Color(255, 255, 255, 80));
+			}
 		}
 		
 		setIcon(cell, table, row, column, isSelected);

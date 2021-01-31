@@ -8,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
-import javax.swing.border.TitledBorder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +32,6 @@ public class ControlUI extends JPanel {
 	}
 	
 	private void buildPanel() {
-		setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setBackground(new Color(83, 175, 19));
 		setBounds(864, 98, 130, 96);
 		setLayout(null);
@@ -65,6 +63,10 @@ public class ControlUI extends JPanel {
 				onHit(boardUI, headerUI, result);
 			} else {
 				onMiss(headerUI);
+			}
+			
+			if (context.getGameController().activateRadar()) {
+				headerUI.updateText("Radar is activated for 3 seconds!");
 			}
 			
 			//updates the board

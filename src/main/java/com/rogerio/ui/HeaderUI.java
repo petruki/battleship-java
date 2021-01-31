@@ -2,15 +2,20 @@ package com.rogerio.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import com.rogerio.model.Scoreboard;
+import com.rogerio.ui.dialog.GameSettingsDialog;
 
 /**
  * @author petruki (Roger Floriano)
@@ -18,10 +23,11 @@ import com.rogerio.model.Scoreboard;
 @SuppressWarnings("serial")
 public class HeaderUI extends JPanel {
 	
+	private JButton btnSettings;
 	private JLabel txtTimer;
 	private JLabel txtMessage;
 	private final MainUI context;
-	private final String timeLimit;
+	private String timeLimit;
 	
 	private Timer timer;
 	private int secs = 0;
@@ -61,6 +67,34 @@ public class HeaderUI extends JPanel {
 		btnReload.setFocusable(false);
 		btnReload.addActionListener(context::onStartNewGame);
 		add(btnReload);
+		
+		btnSettings = new JButton("Settings");
+		btnSettings.setVisible(false);
+		btnSettings.setForeground(Color.WHITE);
+		btnSettings.setFocusable(false);
+		btnSettings.setBackground(new Color(0, 128, 0));
+		btnSettings.setBounds(806, 11, 87, 30);
+		btnSettings.addActionListener(this::onSettings);
+		add(btnSettings);
+	}
+	
+	private void onSettings(ActionEvent event) {
+		GameSettingsDialog gameSettings = new GameSettingsDialog();
+		gameSettings.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		gameSettings.setVisible(true);
+		
+		gameSettings.setDefaultCloseOperation(
+			    JDialog.DISPOSE_ON_CLOSE);
+		
+		gameSettings.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosed(WindowEvent e) {
+		    	if (gameSettings.isStartGame()) {
+		    		timeLimit = gameSettings.getTimeLimit();
+		    		context.changeSettings(gameSettings.getShips(), gameSettings.getShipSize());
+		    	}
+	    	}
+		});
 	}
 	
 	private void updateTxtTimer() {
@@ -100,6 +134,7 @@ public class HeaderUI extends JPanel {
 	public void reloadGame() {
 		txtTimer.setText("0:00");
 		txtMessage.setText("");
+		btnSettings.setVisible(false);
 		
 		TimerTask timerTask = new TimerTask() {
             @Override
@@ -117,6 +152,11 @@ public class HeaderUI extends JPanel {
        	timer = new Timer();
     	timer.scheduleAtFixedRate(timerTask, 1000, 1000);
     }
+	
+	public void onGameFinished() {
+		timer.cancel();
+		btnSettings.setVisible(true);
+	}
 	
 	public void updateText(String textMessage) {
 		txtMessage.setText(textMessage);

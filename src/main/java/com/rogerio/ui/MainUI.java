@@ -110,7 +110,12 @@ public class MainUI extends JFrame {
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
-		headerUI.getTimer().cancel();
+		headerUI.onGameFinished();
+	}
+	
+	public void changeSettings(int ships, int shipSize) {
+		this.ships = ships;
+		this.shipSize = shipSize;
 	}
 
 	public GameController getGameController() {

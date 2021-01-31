@@ -17,6 +17,8 @@ public class GameController {
 	private static final Logger logger = LogManager.getLogger(GameController.class);
 	
 	private Scoreboard scoreBoard;
+	private int missCounter = 0;
+	private boolean radar;
 
 	/**
 	 * Generate game matrix targets
@@ -131,6 +133,9 @@ public class GameController {
 					int slot = Integer.parseInt(result.toString());
 					if (slot != 0)
 						boardMatrix[row][col] = -1;
+					else
+						missCounter++;
+					
 					return Target.createTarget(slot, row, col);
 				}
 			}
@@ -143,8 +148,31 @@ public class GameController {
 		throw new Exception("Oops, that's off the board!");
 	}
 
+	public boolean activateRadar() {
+		if (missCounter >= 3) {
+			missCounter = 0;
+			radar = true;
+			new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(3000);
+						radar = false;
+					} catch (InterruptedException e) {
+						logger.error(e);
+					}
+				};
+			}.start();
+			return true;
+		}
+		return false;
+	}
+
 	public Scoreboard getScoreBoard() {
 		return scoreBoard;
+	}
+	
+	public boolean isRadarActivated() {
+		return radar;
 	}
 
 }

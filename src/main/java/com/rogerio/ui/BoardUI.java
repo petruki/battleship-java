@@ -54,7 +54,7 @@ public class BoardUI extends JTable {
 	
 	public void setBoard(Object[][] matrix) {
 		setModel(tableModel.getTableModel(matrix));
-		new TableRender(this);
+		new TableRender(this, context.getGameController());
 	}
 
 	public Object[][] getBoard() {
