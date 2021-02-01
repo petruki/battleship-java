@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.github.petruki.battleship.model.GameSettings;
 import com.github.petruki.battleship.util.ResourceConstants;
 import com.github.petruki.battleship.util.ResourcesCache;
 
@@ -97,16 +98,19 @@ public class GameSettingsDialog extends JDialog {
 		setLocation(x, y);
 	}
 	
-	public int getShips() {
-		return Integer.parseInt(comboShips.getSelectedItem().toString());
+	public void setSettings(GameSettings gameSettings) {
+		comboShips.setSelectedItem(gameSettings.getShips());
+		comboShipSize.setSelectedItem(gameSettings.getShipSize());
+		comboTimeLimit.setSelectedItem(gameSettings.getTimeLimit());
 	}
 	
-	public int getShipSize() {
-		return Integer.parseInt(comboShipSize.getSelectedItem().toString());
-	}
-	
-	public String getTimeLimit() {
-		return comboTimeLimit.getSelectedItem().toString();
+	public GameSettings getSettings() {
+		final GameSettings gameSettings = new GameSettings();
+		gameSettings.setShips(Integer.parseInt(comboShips.getSelectedItem().toString()));
+		gameSettings.setShipSize(Integer.parseInt(comboShipSize.getSelectedItem().toString()));
+		gameSettings.setTimeLimit(comboTimeLimit.getSelectedItem().toString());
+		
+		return gameSettings;
 	}
 
 	public boolean isStartGame() {

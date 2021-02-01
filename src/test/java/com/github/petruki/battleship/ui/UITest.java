@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.petruki.battleship.model.GameSettings;
 import com.github.petruki.battleship.model.Target;
 import com.github.petruki.battleship.ui.MainUI;
 
@@ -14,7 +15,11 @@ public class UITest {
 	
 	@Before
 	public void setup() {
-		context = new MainUI(4, 3, "1:00");
+		GameSettings gameSettings = new GameSettings();
+		gameSettings.setShips(4);
+		gameSettings.setShipSize(3);
+		gameSettings.setTimeLimit("1:00");
+		context = new MainUI(gameSettings);
 	}
 	
 	@Test

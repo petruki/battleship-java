@@ -79,19 +79,19 @@ public class HeaderUI extends JPanel {
 	}
 	
 	private void onSettings(ActionEvent event) {
-		GameSettingsDialog gameSettings = new GameSettingsDialog();
-		gameSettings.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		gameSettings.setVisible(true);
-		
-		gameSettings.setDefaultCloseOperation(
+		GameSettingsDialog gameSettingsDialog = new GameSettingsDialog();
+		gameSettingsDialog.setSettings(context.getSettings());
+		gameSettingsDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		gameSettingsDialog.setVisible(true);
+		gameSettingsDialog.setDefaultCloseOperation(
 			    JDialog.DISPOSE_ON_CLOSE);
 		
-		gameSettings.addWindowListener(new WindowAdapter() {
+		gameSettingsDialog.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosed(WindowEvent e) {
-		    	if (gameSettings.isStartGame()) {
-		    		timeLimit = gameSettings.getTimeLimit();
-		    		context.changeSettings(gameSettings.getShips(), gameSettings.getShipSize());
+		    	if (gameSettingsDialog.isStartGame()) {
+		    		timeLimit = gameSettingsDialog.getSettings().getTimeLimit();
+		    		context.changeSettings(gameSettingsDialog.getSettings());
 		    	}
 	    	}
 		});

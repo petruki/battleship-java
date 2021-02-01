@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.github.petruki.battleship.controller.GameController;
+import com.github.petruki.battleship.model.GameSettings;
 import com.github.petruki.battleship.model.Scoreboard;
 import com.github.petruki.battleship.util.ResourceConstants;
 import com.github.petruki.battleship.util.ResourcesCache;
@@ -24,6 +25,7 @@ import com.github.petruki.battleship.util.ResourcesCache;
 @SuppressWarnings("serial")
 public class MainUI extends JFrame {
 
+	private GameSettings gameSettings;
 	private GameController gameController;
 
 	private BackgroundPanel contentPane;
@@ -32,15 +34,9 @@ public class MainUI extends JFrame {
 	private BoardUI boardUI;
 	private ScoreUI scoreUI;
 	private EndGameScoreUI endGameScoreUI;
-	
-	private int ships;
-	private int shipSize;
-	private String timeLimit;
 
-	public MainUI(int ships, int shipSize, String timeLimit) {
-		this.ships = ships;
-		this.shipSize = shipSize;
-		this.timeLimit = timeLimit;
+	public MainUI(final GameSettings gameSettings) {
+		this.gameSettings = gameSettings;
 		buildPanel();
 	}
 	
@@ -52,15 +48,15 @@ public class MainUI extends JFrame {
 		setResizable(false);
 		centerUI();
 		
-		gameController = new GameController(ships * shipSize);
+		gameController = new GameController(gameSettings.getTargets());
 		controlUI = new ControlUI(this);
-		headerUI = new HeaderUI(this, timeLimit);
+		headerUI = new HeaderUI(this, gameSettings.getTimeLimit());
 		boardUI = new BoardUI(this);
 		scoreUI = new ScoreUI();
 		endGameScoreUI = new EndGameScoreUI();
 
 		contentPane = new BackgroundPanel(
-				ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD));
+			ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
@@ -88,9 +84,11 @@ public class MainUI extends JFrame {
 		controlUI.setVisible(true);
 		scoreUI.setVisible(true);
 		
-		contentPane.setBackground(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD));
+		contentPane.setBackground(ResourcesCache.getInstance()
+				.getImages(ResourceConstants.IMG_BOARD));
 		
-		Object[][] matrix = gameController.generateMatrix(7, 7, ships, shipSize);
+		Object[][] matrix = gameController
+				.generateMatrix(7, 7, gameSettings.getShips(), gameSettings.getShipSize());
 		
 		headerUI.reloadGame();
 		boardUI.setBoard(matrix);
@@ -98,13 +96,11 @@ public class MainUI extends JFrame {
 	}
 	
 	public void onGameFinished(Scoreboard scoreBoard) {
-		if ((scoreBoard.getFinalScore()) > 0) {
-			contentPane.setBackground(
-					ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_END_GOOD));
-		} else {
-			contentPane.setBackground(
-					ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_END_BAD));
-		}
+		contentPane.setBackground(
+			ResourcesCache.getInstance().getImages(
+					scoreBoard.getFinalScore() > 0 ? 
+							ResourceConstants.IMG_BOARD_END_GOOD : 
+							ResourceConstants.IMG_BOARD_END_BAD));
 		
 		endGameScoreUI.showScore(scoreBoard);
 		boardUI.setVisible(false);
@@ -113,9 +109,12 @@ public class MainUI extends JFrame {
 		headerUI.onGameFinished();
 	}
 	
-	public void changeSettings(int ships, int shipSize) {
-		this.ships = ships;
-		this.shipSize = shipSize;
+	public void changeSettings(GameSettings gameSettings) {
+		this.gameSettings = gameSettings;
+	}
+	
+	public GameSettings getSettings() {
+		return gameSettings;
 	}
 
 	public GameController getGameController() {
@@ -156,6 +155,5 @@ public class MainUI extends JFrame {
 			this.background = background;
 			MainUI.this.repaint();
 		}
-		
 	}
 }
