@@ -68,7 +68,9 @@ public class MainUI extends JFrame {
 		getContentPane().add(scoreUI);
 		getContentPane().add(endGameScoreUI);
 		
-		onStartNewGame(null);
+		boardUI.setVisible(false);
+		controlUI.setVisible(false);
+		scoreUI.setVisible(false);
 	}
 
 	private void centerUI() {
@@ -103,6 +105,13 @@ public class MainUI extends JFrame {
 							ResourceConstants.IMG_BOARD_END_BAD));
 		
 		endGameScoreUI.showScore(scoreBoard);
+		boardUI.setVisible(false);
+		controlUI.setVisible(false);
+		scoreUI.setVisible(false);
+		headerUI.onGameFinished();
+	}
+	
+	public void onGameEnded() {
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);

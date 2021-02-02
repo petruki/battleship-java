@@ -6,6 +6,12 @@ public class GameSettings {
 	private int shipSize;
 	private String timeLimit;
 	
+	public GameSettings() {
+		this.ships = 3;
+		this.shipSize = 3;
+		this.timeLimit = "0:20";
+	}
+	
 	public int getShips() {
 		return ships;
 	}

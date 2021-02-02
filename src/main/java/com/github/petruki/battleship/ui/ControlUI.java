@@ -51,6 +51,25 @@ public class ControlUI extends JPanel {
 		add(btnFire);
 	}
 	
+	private void onHit(final BoardUI boardUI, final HeaderUI headerUI, final Target result) {
+		if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
+			headerUI.updateText("Oops, you already hit that location!");
+		else {
+			if (context.getGameController().hasSink(boardUI.getBoard(), result.getShipId())) {
+				headerUI.updateText("You sank my battleship!");
+			} else {
+				headerUI.updateText("HIT!");
+			}
+
+			headerUI.updateScoreUI(true);
+		}
+	}
+
+	private void onMiss(final HeaderUI headerUI) {
+		headerUI.updateText("You missed.");
+		headerUI.updateScoreUI(false);
+	}
+	
 	public void onFire(ActionEvent event) {
 		try {
 			final BoardUI boardUI = context.getBoardUI();
@@ -76,25 +95,6 @@ public class ControlUI extends JPanel {
 			if (event != null)
 				JOptionPane.showMessageDialog(context, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-	}
-	
-	private void onHit(final BoardUI boardUI, final HeaderUI headerUI, final Target result) {
-		if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
-			headerUI.updateText("Oops, you already hit that location!");
-		else {
-			if (context.getGameController().hasSink(boardUI.getBoard(), result.getShipId())) {
-				headerUI.updateText("You sank my battleship!");
-			} else {
-				headerUI.updateText("HIT!");
-			}
-
-			headerUI.updateScoreUI(true);
-		}
-	}
-
-	private void onMiss(final HeaderUI headerUI) {
-		headerUI.updateText("You missed.");
-		headerUI.updateScoreUI(false);
 	}
 	
 	public void updateCoordinates(String coordinates) {

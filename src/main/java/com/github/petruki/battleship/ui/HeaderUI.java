@@ -23,16 +23,19 @@ import com.github.petruki.battleship.ui.dialog.GameSettingsDialog;
 @SuppressWarnings("serial")
 public class HeaderUI extends JPanel {
 	
+	private JButton btnStart;
+	private JButton btnStop;
 	private JButton btnSettings;
 	private JLabel txtTimer;
 	private JLabel txtMessage;
-	private final MainUI context;
-	private String timeLimit;
 	
 	private Timer timer;
 	private int secs = 0;
 	private int minutes = 0;
 	private String pattern;
+	private String timeLimit;
+	
+	private final MainUI context;
 	
 	public HeaderUI(final MainUI context, final String timeLimit) {
 		this.context = context;
@@ -60,16 +63,25 @@ public class HeaderUI extends JPanel {
 		txtTimer.setBounds(471, 11, 68, 24);
 		add(txtTimer);
 
-		JButton btnReload = new JButton("Reload");
-		btnReload.setForeground(Color.WHITE);
-		btnReload.setBackground(new Color(0, 128, 0));
-		btnReload.setBounds(903, 10, 87, 30);
-		btnReload.setFocusable(false);
-		btnReload.addActionListener(context::onStartNewGame);
-		add(btnReload);
+		btnStart = new JButton("Start");
+		btnStart.setForeground(Color.WHITE);
+		btnStart.setBackground(new Color(0, 128, 0));
+		btnStart.setBounds(903, 10, 87, 30);
+		btnStart.setFocusable(false);
+		btnStart.addActionListener(context::onStartNewGame);
+		add(btnStart);
+		
+		btnStop = new JButton("End");
+		btnStop.setForeground(Color.WHITE);
+		btnStop.setBackground(new Color(0, 128, 0));
+		btnStop.setBounds(903, 10, 87, 30);
+		btnStop.setFocusable(false);
+		btnStop.setVisible(false);
+		btnStop.addActionListener(this::onEndGame);
+		add(btnStop);
 		
 		btnSettings = new JButton("Settings");
-		btnSettings.setVisible(false);
+		btnSettings.setVisible(true);
 		btnSettings.setForeground(Color.WHITE);
 		btnSettings.setFocusable(false);
 		btnSettings.setBackground(new Color(0, 128, 0));
@@ -95,6 +107,11 @@ public class HeaderUI extends JPanel {
 		    	}
 	    	}
 		});
+	}
+	
+	private void onEndGame(ActionEvent event) {
+		btnStop.setVisible(false);
+		context.onGameEnded();
 	}
 	
 	private void updateTxtTimer() {
@@ -132,6 +149,8 @@ public class HeaderUI extends JPanel {
 	}
 	
 	public void reloadGame() {
+		btnStart.setVisible(false);
+		btnStop.setVisible(true);
 		txtTimer.setText("0:00");
 		txtMessage.setText("");
 		btnSettings.setVisible(false);
@@ -156,6 +175,7 @@ public class HeaderUI extends JPanel {
 	public void onGameFinished() {
 		timer.cancel();
 		btnSettings.setVisible(true);
+		btnStart.setVisible(true);
 	}
 	
 	public void updateText(String textMessage) {

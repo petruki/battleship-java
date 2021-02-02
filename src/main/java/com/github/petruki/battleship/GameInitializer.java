@@ -1,10 +1,7 @@
 package com.github.petruki.battleship;
 
 import java.awt.EventQueue;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -14,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.battleship.model.GameSettings;
 import com.github.petruki.battleship.ui.MainUI;
-import com.github.petruki.battleship.ui.dialog.GameSettingsDialog;
 import com.github.petruki.battleship.util.ResourcesCache;
 
 /**
@@ -26,22 +22,7 @@ public class GameInitializer {
 
 	public static void main(String[] args) {
 		setupNimbus();
-		setupGame();
-	}
-	
-	private static void setupGame() {
-		GameSettingsDialog gameSettings = new GameSettingsDialog();
-		gameSettings.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		gameSettings.setVisible(true);
-		gameSettings.addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosed(WindowEvent e) {
-		    	if (gameSettings.isStartGame()) {
-		    		startGame(gameSettings.getSettings());
-		    	}		    		
-	    	}
-		});
-		
+		startGame(new GameSettings());
 	}
 	
 	private static void startGame(final GameSettings gameSettings) {
