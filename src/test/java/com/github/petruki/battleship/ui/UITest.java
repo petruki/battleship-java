@@ -20,6 +20,7 @@ public class UITest {
 		gameSettings.setShipSize(3);
 		gameSettings.setTimeLimit("1:00");
 		context = new MainUI(gameSettings);
+		context.onStartNewGame(null);
 	}
 	
 	@Test

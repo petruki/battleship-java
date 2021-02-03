@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -40,6 +39,7 @@ public class GameSettingsDialog extends JDialog {
 		setTitle("Battleship Settings");
 		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
 		setBounds(100, 100, 225, 179);
+		setAlwaysOnTop(true);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		centerUI();
@@ -75,20 +75,14 @@ public class GameSettingsDialog extends JDialog {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
-		JButton okButton = new JButton("Apply");
-		buttonPane.add(okButton);
-		okButton.setForeground(new Color(255, 255, 255));
-		okButton.setBackground(new Color(128, 0, 0));
-		okButton.setFont(new Font("Tahoma", Font.BOLD, 18));
-		getRootPane().setDefaultButton(okButton);
+		JButton btnApply = new JButton("Apply");
+		buttonPane.add(btnApply);
+		btnApply.setForeground(new Color(255, 255, 255));
+		btnApply.setBackground(new Color(128, 0, 0));
+		btnApply.setFont(new Font("Tahoma", Font.BOLD, 18));
+		btnApply.addActionListener(this::onApply);
 		
-		okButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				startGame = true;
-				dispose();
-			}
-		});
+		getRootPane().setDefaultButton(btnApply);
 	}
 	
 	private void centerUI() {
@@ -96,6 +90,11 @@ public class GameSettingsDialog extends JDialog {
 		int x = (int) ((dimension.getWidth() - getWidth()) / 2);
 		int y = (int) ((dimension.getHeight() - getHeight()) / 2);
 		setLocation(x, y);
+	}
+	
+	private void onApply(ActionEvent event) {
+		startGame = true;
+		dispose();
 	}
 	
 	public void setSettings(GameSettings gameSettings) {

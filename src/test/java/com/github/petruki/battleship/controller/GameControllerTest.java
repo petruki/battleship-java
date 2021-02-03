@@ -7,18 +7,18 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.petruki.battleship.controller.GameController;
+import com.github.petruki.battleship.controller.OfflineGameController;
 import com.github.petruki.battleship.model.SlotType;
 import com.github.petruki.battleship.model.Target;
 
 public class GameControllerTest {
 	
-	private GameController gameController;
+	private OfflineGameController gameController;
 	private Object[][] fixture1;
 	
 	@Before
 	public void setup() {
-		gameController = new GameController(3);
+		gameController = new OfflineGameController(3);
 	}
 	
 	private void generateFixture() {

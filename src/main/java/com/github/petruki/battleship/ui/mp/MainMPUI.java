@@ -1,4 +1,4 @@
-package com.github.petruki.battleship.ui;
+package com.github.petruki.battleship.ui.mp;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -11,49 +11,51 @@ import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
 import com.github.petruki.battleship.controller.GameController;
-import com.github.petruki.battleship.controller.OfflineGameController;
+import com.github.petruki.battleship.controller.OnlineGameController;
 import com.github.petruki.battleship.model.GameSettings;
 import com.github.petruki.battleship.model.Scoreboard;
+import com.github.petruki.battleship.ui.EndGameScoreUI;
+import com.github.petruki.battleship.ui.MainUI;
+import com.github.petruki.battleship.ui.ScoreUI;
 import com.github.petruki.battleship.ui.board.BackgroundPanel;
-import com.github.petruki.battleship.ui.mp.MainMPUI;
 import com.github.petruki.battleship.util.ResourceConstants;
 import com.github.petruki.battleship.util.ResourcesCache;
 
 /**
- * This is the App Context which handles all other UI objects.
+ * This is the App Context for the Multiplayer which handles all other UI objects.
  * 
  * @author petruki (Roger Floriano)
  */
 @SuppressWarnings("serial")
-public class MainUI extends JFrame {
+public class MainMPUI extends JFrame {
 
 	private GameSettings gameSettings;
 	private GameController gameController;
 
 	private BackgroundPanel contentPane;
-	private BoardUI boardUI;
+	private BoardMPUI boardUI;
 	private ScoreUI scoreUI;
-	private ControlUI controlUI;
-	private HeaderUI headerUI;
+	private ControlMPUI controlUI;
+	private HeaderMPUI headerUI;
 	private EndGameScoreUI endGameScoreUI;
 
-	public MainUI(final GameSettings gameSettings) {
+	public MainMPUI(final GameSettings gameSettings) {
 		this.gameSettings = gameSettings;
 		buildPanel();
 	}
 	
 	private void buildPanel() {
-		setTitle("Battleship Java - v1.0.5");
+		setTitle("Battleship Java - v1.0.5 [ONLINE]");
 		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 880);
 		setResizable(false);
 		centerUI();
 		
-		gameController = new OfflineGameController(gameSettings.getTargets());
-		controlUI = new ControlUI(this);
-		headerUI = new HeaderUI(this, gameSettings.getTimeLimit());
-		boardUI = new BoardUI(this);
+		gameController = new OnlineGameController(gameSettings.getTargets());
+		controlUI = new ControlMPUI(this);
+		headerUI = new HeaderMPUI(this, gameSettings.getTimeLimit());
+		boardUI = new BoardMPUI(this);
 		scoreUI = new ScoreUI();
 		endGameScoreUI = new EndGameScoreUI();
 
@@ -120,12 +122,12 @@ public class MainUI extends JFrame {
 		headerUI.onGameFinished();
 	}
 	
-	public void onSwitchToOnline() {
+	public void onSwitchToOffline() {
 		dispose();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainMPUI frame = new MainMPUI(gameSettings);
+					MainUI frame = new MainUI(gameSettings);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -146,15 +148,15 @@ public class MainUI extends JFrame {
 		return gameController;
 	}
 	
-	public HeaderUI getHeaderUI() {
+	public HeaderMPUI getHeaderUI() {
 		return headerUI;
 	}
 
-	public ControlUI getControlUI() {
+	public ControlMPUI getControlUI() {
 		return controlUI;
 	}
 
-	public BoardUI getBoardUI() {
+	public BoardMPUI getBoardUI() {
 		return boardUI;
 	}
 

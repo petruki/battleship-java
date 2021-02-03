@@ -1,4 +1,4 @@
-package com.github.petruki.battleship.ui;
+package com.github.petruki.battleship.ui.mp;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -16,18 +16,17 @@ import javax.swing.SwingConstants;
 
 import com.github.petruki.battleship.model.Scoreboard;
 import com.github.petruki.battleship.ui.dialog.GameSettingsDialog;
-import com.github.petruki.battleship.ui.dialog.MultiplayerDialog;
 
 /**
  * @author petruki (Roger Floriano)
  */
 @SuppressWarnings("serial")
-public class HeaderUI extends JPanel {
+public class HeaderMPUI extends JPanel {
 	
 	private JButton btnStart;
 	private JButton btnStop;
 	private JButton btnSettings;
-	private JButton btnOnline;
+	private JButton btnOffline;
 	private JLabel txtTimer;
 	private JLabel txtMessage;
 	
@@ -37,9 +36,9 @@ public class HeaderUI extends JPanel {
 	private String pattern;
 	private String timeLimit;
 	
-	private final MainUI context;
+	private final MainMPUI context;
 	
-	public HeaderUI(final MainUI context, final String timeLimit) {
+	public HeaderMPUI(final MainMPUI context, final String timeLimit) {
 		this.context = context;
 		this.timeLimit = timeLimit;
 		buildPanel();
@@ -91,13 +90,13 @@ public class HeaderUI extends JPanel {
 		btnSettings.addActionListener(this::onSettings);
 		add(btnSettings);
 		
-		btnOnline = new JButton("Online");
-		btnOnline.setForeground(Color.WHITE);
-		btnOnline.setFocusable(false);
-		btnOnline.setBackground(new Color(0, 128, 0));
-		btnOnline.setBounds(709, 11, 87, 30);
-		btnOnline.addActionListener(this::onOnline);
-		add(btnOnline);
+		btnOffline = new JButton("Offline");
+		btnOffline.setForeground(Color.WHITE);
+		btnOffline.setFocusable(false);
+		btnOffline.setBackground(new Color(0, 128, 0));
+		btnOffline.setBounds(709, 11, 87, 30);
+		btnOffline.addActionListener(this::onOffline);
+		add(btnOffline);
 	}
 	
 	private void onSettings(ActionEvent event) {
@@ -124,20 +123,8 @@ public class HeaderUI extends JPanel {
 		context.onGameEnded();
 	}
 	
-	private void onOnline(ActionEvent event) {
-		MultiplayerDialog multiplayerDialog = new MultiplayerDialog();
-		multiplayerDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		multiplayerDialog.setVisible(true);
-		multiplayerDialog.setDefaultCloseOperation(
-			    JDialog.DISPOSE_ON_CLOSE);
-		
-		multiplayerDialog.addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosed(WindowEvent e) {
-		    	if (multiplayerDialog.isLobbyCreated())
-		    		context.onSwitchToOnline();
-	    	}
-		});
+	private void onOffline(ActionEvent event) {
+		context.onSwitchToOffline();
 	}
 	
 	private void updateTxtTimer() {
@@ -175,7 +162,7 @@ public class HeaderUI extends JPanel {
 	}
 	
 	public void reloadGame() {
-		btnOnline.setVisible(false);
+		btnOffline.setVisible(false);
 		btnStart.setVisible(false);
 		btnStop.setVisible(true);
 		txtTimer.setText("0:00");
@@ -203,7 +190,7 @@ public class HeaderUI extends JPanel {
 		timer.cancel();
 		btnSettings.setVisible(true);
 		btnStart.setVisible(true);
-		btnOnline.setVisible(true);
+		btnOffline.setVisible(true);
 	}
 	
 	public void updateText(String textMessage) {
