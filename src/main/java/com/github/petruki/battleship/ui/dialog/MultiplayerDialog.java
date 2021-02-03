@@ -7,6 +7,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -19,6 +22,12 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
+import com.github.petruki.battleship.broker.BrokerClient;
+import com.github.petruki.battleship.broker.BrokerEvents;
+import com.github.petruki.battleship.broker.data.BrokerData;
+import com.github.petruki.battleship.broker.data.CreateRoomDTO;
+import com.github.petruki.battleship.broker.data.PlayerDTO;
+import com.github.petruki.battleship.broker.data.RoomDataDTO;
 import com.github.petruki.battleship.util.ResourceConstants;
 import com.github.petruki.battleship.util.ResourcesCache;
 
@@ -34,12 +43,23 @@ public class MultiplayerDialog extends JDialog {
 	private JTextField txtRoomName;
 	private JTextField txtPlayerName;
 	private JLabel txtStatus;
+	private JList<String> listPlayers;
 	private DefaultListModel<String> listPlayersModel;
 	
+	private final BrokerClient client;
+	
 	private boolean lobbyCreated;
+	private boolean matchStarted;
+	private boolean host;
 	
 	public MultiplayerDialog() {
 		buildPanel();
+		
+		client = BrokerClient.getInstance();
+		client.connect();
+		client.subscribe(BrokerEvents.CHECK_CREATE_ROOM.toString(), this::onWaitForRoomToBeCreated);
+		client.subscribe(BrokerEvents.ROOM_DATA.toString(), this::onRoomData);
+		client.subscribe(BrokerEvents.MATCH_STARTED.toString(), this::onMatchStarted);
 	}
 	
 	private void buildPanel() {
@@ -86,7 +106,7 @@ public class MultiplayerDialog extends JDialog {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
 		
-		JList<String> listPlayers = new JList<>();
+		listPlayers = new JList<>();
 		listPlayers.setFont(new Font("Tahoma", Font.BOLD, 26));
 		listPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listPlayersModel = new DefaultListModel<>();
@@ -98,7 +118,7 @@ public class MultiplayerDialog extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
 		btnStart = new JButton("Start");
-		btnStart.setEnabled(false);
+		btnStart.setEnabled(true);
 		btnStart.setForeground(new Color(255, 255, 255));
 		btnStart.setBackground(new Color(128, 0, 0));
 		btnStart.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -106,6 +126,19 @@ public class MultiplayerDialog extends JDialog {
 		buttonPane.add(btnStart);
 		
 		getRootPane().setDefaultButton(btnStart);
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				if (lobbyCreated && !matchStarted) {
+					lobbyCreated = false;
+					PlayerDTO playerDTO = new PlayerDTO(txtRoomName.getText(), 
+							BrokerEvents.PLAYER_HAS_DISCONNECTED);
+					playerDTO.setPlayer(txtPlayerName.getText());
+					client.emitEvent(playerDTO);
+				}
+			}
+		});
 	}
 	
 	private void centerUI() {
@@ -117,29 +150,24 @@ public class MultiplayerDialog extends JDialog {
 	
 	private void onHost(ActionEvent event) {
 		if (validateMatchParams()) {
-			listPlayersModel.addElement(txtPlayerName.getText());
-			waitForPlayers();
-			txtStatus.setText("Waiting for players...");
-			
-			btnHost.setEnabled(false);
-			btnJoin.setEnabled(false);
+			CreateRoomDTO createRoomDTO = new CreateRoomDTO(txtRoomName.getText(), 
+					BrokerEvents.CHECK_CREATE_ROOM);
+			createRoomDTO.setPlayer(txtPlayerName.getText());
+			client.emitEvent(createRoomDTO);
 		}
 	}
 	
 	private void onJoin(ActionEvent event) {
 		if (validateMatchParams()) {
+			PlayerDTO playerDTO = new PlayerDTO(txtRoomName.getText(), BrokerEvents.PLAYER_HAS_JOINED);
+			playerDTO.setPlayer(txtPlayerName.getText());
+			client.emitEvent(playerDTO);
+			
 			listPlayersModel.addElement(txtPlayerName.getText());
 			txtStatus.setText("Waiting for host to start...");
 			
-			btnHost.setEnabled(false);
-			btnJoin.setEnabled(false);
+			disableMatchControls();
 		}
-	}
-	
-	private void waitForPlayers() {
-		// TODO: thread broker
-		btnStart.setEnabled(true);
-		btnStart.setBackground(new Color(0, 128, 0));
 	}
 	
 	private boolean validateMatchParams() {
@@ -156,9 +184,66 @@ public class MultiplayerDialog extends JDialog {
 	}
 	
 	private void onStart(ActionEvent event) {
-		lobbyCreated = true;
+		matchStarted = true;
+		
+		if (event != null) {
+			client.emitEvent(new BrokerData(txtRoomName.getText(), 
+					BrokerEvents.MATCH_STARTED.toString()));
+		}
+
+		client.unsubscribeAll();
 		dispose();
 	}
+	
+    private void onWaitForRoomToBeCreated(Object... args) {
+		CreateRoomDTO createRoomDTO = BrokerData.getDTO(CreateRoomDTO.class, args);
+		
+		if (createRoomDTO.isExist()) {
+			txtStatus.setText("Room already exist, try a different one");
+		} else {
+			lobbyCreated = true;
+			host = true;
+			listPlayersModel.addElement(txtPlayerName.getText());
+			txtStatus.setText("Waiting for players...");
+			
+			disableMatchControls();
+		}
+    }
+    
+    private void onRoomData(Object... args) {
+		RoomDataDTO roomDataDTO = BrokerData.getDTO(RoomDataDTO.class, args);
+		
+		//update player list
+		listPlayersModel.clear();
+		listPlayersModel.addAll(
+				roomDataDTO.getPlayers()
+				.stream().map(p -> p.getUsername())
+				.collect(Collectors.toList()));
+		
+		//update lobby status
+		txtStatus.setText(roomDataDTO.getMessage());
+		lobbyCreated = true;
+		
+		//update host match control
+		if (host && roomDataDTO.getPlayers().size() > 1) {
+			btnStart.setEnabled(true);
+			btnStart.setBackground(new Color(0, 128, 0));    			
+		} else {
+			btnStart.setEnabled(false);
+			btnStart.setBackground(new Color(128, 0, 0));    		
+		}
+    }
+    
+    private void onMatchStarted(Object... args) {
+		onStart(null);
+    }
+    
+    private void disableMatchControls() {
+    	btnHost.setEnabled(false);
+		btnJoin.setEnabled(false);
+		txtRoomName.setEnabled(false);
+		txtPlayerName.setEnabled(false);
+    }
 
 	public boolean isLobbyCreated() {
 		return lobbyCreated;

@@ -33,20 +33,19 @@ public class BrokerClient {
 		return instance;
 	}
 	
-    private void initSocket(String room) {
+    private void initSocket() {
         try {
             IO.Options opts = new IO.Options();
             opts.transports = new String[]{WebSocket.NAME};
-            opts.query = String.format("channel=%s", room);
-            socket = IO.socket("localhost:3000", opts);
+            socket = IO.socket("http://localhost:3000", opts);
         } catch (URISyntaxException e) {
         	logger.error(e.getMessage());
         }
     }
     
-    public void connect(String room) {
+    public void connect() {
         if (socket == null || !socket.connected()) {
-            initSocket(room);
+            initSocket();
             socket.connect();
         }
     }
@@ -62,10 +61,10 @@ public class BrokerClient {
         events.clear();
     }
     
-    public void notifyEvent(BrokerData brokerData) {
+    public void emitEvent(BrokerData brokerData) {
         if (socket.connected()) {
             Gson gson = new Gson();
-            socket.emit(BrokerEvents.NOTIFY_EVENT.toString(), gson.toJson(brokerData));
+            socket.emit(brokerData.getAction(), gson.toJson(brokerData));
         }
     }
 
