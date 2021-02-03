@@ -143,12 +143,12 @@ public class MultiplayerDialog extends JDialog {
 	}
 	
 	private boolean validateMatchParams() {
-		if (txtPlayerName.getText().isBlank()) {
+		if (txtPlayerName.getText().isEmpty()) {
 			txtStatus.setText("Must set Player name");
 			return false;
 		}
 		
-		if (txtRoomName.getText().isBlank()) {
+		if (txtRoomName.getText().isEmpty()) {
 			txtStatus.setText("Must set Room name");
 			return false;
 		}
