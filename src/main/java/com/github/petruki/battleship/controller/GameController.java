@@ -1,9 +1,14 @@
 package com.github.petruki.battleship.controller;
 
 import com.github.petruki.battleship.model.Scoreboard;
+import com.github.petruki.battleship.model.ScoreboardOnline;
 import com.github.petruki.battleship.model.Target;
 
 public interface GameController {
+	
+	default public ScoreboardOnline getOnlineScoreBoard() {
+		return null;
+	}
 	
 	/**
 	 * Generate game matrix targets

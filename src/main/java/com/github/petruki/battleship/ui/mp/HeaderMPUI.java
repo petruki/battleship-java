@@ -34,13 +34,11 @@ public class HeaderMPUI extends JPanel {
 	private int secs = 0;
 	private int minutes = 0;
 	private String pattern;
-	private String timeLimit;
 	
 	private final MainMPUI context;
 	
-	public HeaderMPUI(final MainMPUI context, final String timeLimit) {
+	public HeaderMPUI(final MainMPUI context) {
 		this.context = context;
-		this.timeLimit = timeLimit;
 		buildPanel();
 	}
 	
@@ -111,7 +109,6 @@ public class HeaderMPUI extends JPanel {
 		    @Override
 		    public void windowClosed(WindowEvent e) {
 		    	if (gameSettingsDialog.isStartGame()) {
-		    		timeLimit = gameSettingsDialog.getSettings().getTimeLimit();
 		    		context.changeSettings(gameSettingsDialog.getSettings());
 		    	}
 	    	}
@@ -136,11 +133,14 @@ public class HeaderMPUI extends JPanel {
 			pattern = "%s:%s";
 		}
 		
-		if (timeLimit.equals(String.format(pattern, minutes, secs))) {
-			context.onGameFinished(context.getGameController().getScoreBoard());
-		}
-
 		txtTimer.setText(String.format(pattern, minutes, secs));
+	}
+	
+	public void setInvitedPlayerView() {
+		btnStart.setVisible(false);
+		btnSettings.setVisible(false);
+		btnStop.setVisible(false);
+		btnOffline.setBounds(903, 11, 87, 30);
 	}
 	
 	public void updateScoreUI(boolean hit) {
@@ -149,10 +149,8 @@ public class HeaderMPUI extends JPanel {
 		if (hit) {
 			if (scoreBoard.addHit()) {
 				timer.cancel();
-				context.onGameFinished(scoreBoard);
-				txtMessage.setText(
-						String.format("You sank all my battleships, in %s guesses.", 
-								scoreBoard.getHit() + scoreBoard.getMiss()));
+				context.onGameFinished(context.getGameController().getOnlineScoreBoard());
+				txtMessage.setText("Good game!");
 			}
 		} else {
 			scoreBoard.addMiss();
@@ -161,10 +159,15 @@ public class HeaderMPUI extends JPanel {
 		context.getScoreUI().updateScore(scoreBoard);
 	}
 	
-	public void reloadGame() {
-		btnOffline.setVisible(false);
-		btnStart.setVisible(false);
-		btnStop.setVisible(true);
+	public void reloadGame(boolean isHost) {
+		if (!isHost) {
+			btnOffline.setVisible(true);
+		} else {
+			btnOffline.setVisible(false);
+			btnStart.setVisible(false);
+			btnStop.setVisible(true);
+		}
+
 		txtTimer.setText("0:00");
 		txtMessage.setText("");
 		btnSettings.setVisible(false);
@@ -186,11 +189,14 @@ public class HeaderMPUI extends JPanel {
     	timer.scheduleAtFixedRate(timerTask, 1000, 1000);
     }
 	
-	public void onGameFinished() {
+	public void onGameFinished(boolean isHost) {
 		timer.cancel();
-		btnSettings.setVisible(true);
-		btnStart.setVisible(true);
-		btnOffline.setVisible(true);
+		
+		if (isHost) {
+			btnSettings.setVisible(true);
+			btnStart.setVisible(true);
+			btnOffline.setVisible(true);
+		}
 	}
 	
 	public void updateText(String textMessage) {

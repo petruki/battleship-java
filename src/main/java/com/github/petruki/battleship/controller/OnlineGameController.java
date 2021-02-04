@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.petruki.battleship.model.ScoreboardOnline;
 import com.github.petruki.battleship.model.Target;
 
 /**
@@ -13,9 +14,11 @@ import com.github.petruki.battleship.model.Target;
 public class OnlineGameController extends OfflineGameController {
 	
 	private static final Logger logger = LogManager.getLogger(OnlineGameController.class);
+	private ScoreboardOnline onlineScoreboard;
 	
 	public OnlineGameController(int targets) {
 		super(targets);
+		onlineScoreboard = new ScoreboardOnline();
 	}
 	
 	@Override
@@ -47,8 +50,6 @@ public class OnlineGameController extends OfflineGameController {
 					int slot = Integer.parseInt(result.toString());
 					if (slot != 0)
 						boardMatrix[row][col] = -1;
-					else
-						missCounter++;
 					
 					return Target.createTarget(slot, row, col);
 				}
@@ -65,6 +66,11 @@ public class OnlineGameController extends OfflineGameController {
 	@Override
 	public boolean activateRadar() {
 		return false;
+	}
+	
+	@Override
+	public ScoreboardOnline getOnlineScoreBoard() {
+		return this.onlineScoreboard;
 	}
 
 }

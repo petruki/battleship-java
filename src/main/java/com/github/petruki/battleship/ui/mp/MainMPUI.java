@@ -5,16 +5,23 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
+import com.github.petruki.battleship.broker.BrokerClient;
+import com.github.petruki.battleship.broker.BrokerEvents;
+import com.github.petruki.battleship.broker.data.BrokerData;
+import com.github.petruki.battleship.broker.data.MatchDTO;
+import com.github.petruki.battleship.broker.data.PlayerDTO;
+import com.github.petruki.battleship.broker.data.ShotDTO;
 import com.github.petruki.battleship.controller.GameController;
 import com.github.petruki.battleship.controller.OnlineGameController;
 import com.github.petruki.battleship.model.GameSettings;
-import com.github.petruki.battleship.model.Scoreboard;
-import com.github.petruki.battleship.ui.EndGameScoreUI;
+import com.github.petruki.battleship.model.ScoreboardOnline;
 import com.github.petruki.battleship.ui.MainUI;
 import com.github.petruki.battleship.ui.ScoreUI;
 import com.github.petruki.battleship.ui.board.BackgroundPanel;
@@ -37,15 +44,23 @@ public class MainMPUI extends JFrame {
 	private ScoreUI scoreUI;
 	private ControlMPUI controlUI;
 	private HeaderMPUI headerUI;
-	private EndGameScoreUI endGameScoreUI;
+	private EndGameScoreMPUI endGameScoreUI;
+	
+	private final BrokerClient client;
 
 	public MainMPUI(final GameSettings gameSettings) {
+		client = BrokerClient.getInstance();
+		client.connect();
+		client.subscribe(BrokerEvents.NEW_ROUND.toString(), this::onRoundStarted);
+		client.subscribe(BrokerEvents.SELECT_PLAYER.toString(), this::onPlayerSelected);
+		client.subscribe(BrokerEvents.PLAYER_HAS_SHOT.toString(), this::onPlayerShotting);
+		
 		this.gameSettings = gameSettings;
 		buildPanel();
 	}
 	
 	private void buildPanel() {
-		setTitle("Battleship Java - v1.0.5 [ONLINE]");
+		setTitle(String.format("Battleship Java - v1.0.5 [ONLINE] - %s", client.getPlayer().getUsername()));
 		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 880);
@@ -54,10 +69,10 @@ public class MainMPUI extends JFrame {
 		
 		gameController = new OnlineGameController(gameSettings.getTargets());
 		controlUI = new ControlMPUI(this);
-		headerUI = new HeaderMPUI(this, gameSettings.getTimeLimit());
+		headerUI = new HeaderMPUI(this);
 		boardUI = new BoardMPUI(this);
 		scoreUI = new ScoreUI();
-		endGameScoreUI = new EndGameScoreUI();
+		endGameScoreUI = new EndGameScoreMPUI();
 
 		contentPane = new BackgroundPanel(
 			ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD));
@@ -75,6 +90,19 @@ public class MainMPUI extends JFrame {
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
+		
+		if (!client.getPlayer().isHost()) {
+			headerUI.setInvitedPlayerView();
+		}
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				client.unsubscribeAll();
+				client.emitEvent( new PlayerDTO(null, 
+						BrokerEvents.PLAYER_HAS_DISCONNECTED));
+			}
+		});
 	}
 
 	private void centerUI() {
@@ -84,46 +112,84 @@ public class MainMPUI extends JFrame {
 		setLocation(x, y);
 	}
 	
-	public void onStartNewGame(ActionEvent event) {
+	private Object[][] onSetupMatch(Object[][] matrix) {
 		endGameScoreUI.setVisible(false);
 		boardUI.setVisible(true);
-		controlUI.setVisible(true);
 		scoreUI.setVisible(true);
 		
 		contentPane.setBackground(ResourcesCache.getInstance()
 				.getImages(ResourceConstants.IMG_BOARD));
 		
-		Object[][] matrix = gameController
-				.generateMatrix(7, 7, gameSettings.getShips(), gameSettings.getShipSize());
+		if (matrix == null) {
+			matrix = gameController
+						.generateMatrix(7, 7, gameSettings.getShips(), gameSettings.getShipSize());
+		}
 		
-		headerUI.reloadGame();
+		headerUI.reloadGame(client.getPlayer().isHost());
 		boardUI.setBoard(matrix);
+		boardUI.setEnabled(false);
 		scoreUI.updateScore(gameController.getScoreBoard());
+		
+		return matrix;
 	}
 	
-	public void onGameFinished(Scoreboard scoreBoard) {
+	private void onRoundStarted(Object... args) {
+		MatchDTO matchDTO = BrokerData.getDTO(MatchDTO.class, args);
+		onSetupMatch(matchDTO.getMatrix(matchDTO.getMatrix()));
+	}
+	
+	private void onPlayerSelected(Object... args) {
+		controlUI.setVisible(true);
+		boardUI.setEnabled(true);
+	}
+	
+	private void onPlayerShotting(Object... args) {
+		ShotDTO shotDTO = BrokerData.getDTO(ShotDTO.class, args);
+		
+		if (!client.getPlayer().getUsername().equals(shotDTO.getPlayer()))
+			controlUI.onFireByOponent(shotDTO);
+	}
+	
+	public void onStartNewGame(ActionEvent event) {
+		// bring players waiting on the lobby to join the round
+		MatchDTO matchDTO = new MatchDTO(BrokerEvents.MATCH_STARTED);
+		client.emitEvent(matchDTO);
+		
+		final Object[][] matrix = onSetupMatch(null);
+		
+		// share board with players and start rotation
+		matchDTO = new MatchDTO(BrokerEvents.NEW_ROUND);
+		matchDTO.setMatrix(matrix);
+		client.emitEvent(matchDTO);
+	}
+	
+	public void onGameFinished(ScoreboardOnline scoreBoard) {
 		contentPane.setBackground(
-			ResourcesCache.getInstance().getImages(
-					scoreBoard.getFinalScore() > 0 ? 
-							ResourceConstants.IMG_BOARD_END_GOOD : 
-							ResourceConstants.IMG_BOARD_END_BAD));
+			ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_END_GOOD));
 		
 		endGameScoreUI.showScore(scoreBoard);
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
-		headerUI.onGameFinished();
+		headerUI.onGameFinished(client.getPlayer().isHost());
+		
+		System.out.println(gameController.getOnlineScoreBoard());
 	}
 	
 	public void onGameEnded() {
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
-		headerUI.onGameFinished();
+		headerUI.onGameFinished(client.getPlayer().isHost());
 	}
 	
 	public void onSwitchToOffline() {
+		client.unsubscribeAll();
+		client.emitEvent( new PlayerDTO(null, 
+				BrokerEvents.PLAYER_HAS_DISCONNECTED));
+		
 		dispose();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

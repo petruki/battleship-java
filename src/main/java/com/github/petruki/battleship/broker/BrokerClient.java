@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.petruki.battleship.broker.data.BrokerData;
+import com.github.petruki.battleship.model.Player;
 import com.google.gson.Gson;
 
 import io.socket.client.IO;
@@ -22,6 +23,7 @@ public class BrokerClient {
 	private static BrokerClient instance;
 	private Socket socket;
 	private List<String> events;
+	private Player player;
 	
 	private BrokerClient() {
 		events = new ArrayList<>();
@@ -67,5 +69,13 @@ public class BrokerClient {
             socket.emit(brokerData.getAction(), gson.toJson(brokerData));
         }
     }
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
 
 }

@@ -28,6 +28,7 @@ import com.github.petruki.battleship.broker.data.BrokerData;
 import com.github.petruki.battleship.broker.data.CreateRoomDTO;
 import com.github.petruki.battleship.broker.data.PlayerDTO;
 import com.github.petruki.battleship.broker.data.RoomDataDTO;
+import com.github.petruki.battleship.model.Player;
 import com.github.petruki.battleship.util.ResourceConstants;
 import com.github.petruki.battleship.util.ResourcesCache;
 
@@ -53,13 +54,13 @@ public class MultiplayerDialog extends JDialog {
 	private boolean host;
 	
 	public MultiplayerDialog() {
-		buildPanel();
-		
 		client = BrokerClient.getInstance();
 		client.connect();
 		client.subscribe(BrokerEvents.CHECK_CREATE_ROOM.toString(), this::onWaitForRoomToBeCreated);
 		client.subscribe(BrokerEvents.ROOM_DATA.toString(), this::onRoomData);
 		client.subscribe(BrokerEvents.MATCH_STARTED.toString(), this::onMatchStarted);
+		
+		buildPanel();
 	}
 	
 	private void buildPanel() {
@@ -186,11 +187,18 @@ public class MultiplayerDialog extends JDialog {
 	private void onStart(ActionEvent event) {
 		matchStarted = true;
 		
+		Player player = new Player();
+		player.setUsername(txtPlayerName.getText());
+		player.setRoom(txtRoomName.getText());
+		player.setHost(false);
+		
 		if (event != null) {
+			player.setHost(true);
 			client.emitEvent(new BrokerData(txtRoomName.getText(), 
 					BrokerEvents.MATCH_STARTED.toString()));
 		}
 
+		client.setPlayer(player);
 		client.unsubscribeAll();
 		dispose();
 	}

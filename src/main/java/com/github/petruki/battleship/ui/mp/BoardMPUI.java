@@ -32,7 +32,6 @@ public class BoardMPUI extends JTable {
 		setBackground(new Color(0, 0, 0, 0));
 		setShowGrid(false);
 		setOpaque(false);
-
 		
 		initTableListener();
 	}
@@ -41,13 +40,16 @@ public class BoardMPUI extends JTable {
 		addMouseListener(new TableListener(this) {
 			@Override
 			public void boardSelected(Target target) {
-				context.getControlUI().updateCoordinates(target.getCoord());
+				if (isEnabled())
+					context.getControlUI().updateCoordinates(target.getCoord());
 			}
 
 			@Override
 			public void boardSelecetedAndFire(Target target) {
-				context.getControlUI().updateCoordinates(target.getCoord());
-				context.getControlUI().onFire(null);
+				if (isEnabled()) {
+					context.getControlUI().updateCoordinates(target.getCoord());
+					context.getControlUI().onFire(null);					
+				}
 			}
 		});
 	}

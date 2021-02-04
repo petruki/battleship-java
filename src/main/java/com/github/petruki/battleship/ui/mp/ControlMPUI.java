@@ -12,6 +12,11 @@ import javax.swing.JTextPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.petruki.battleship.broker.BrokerClient;
+import com.github.petruki.battleship.broker.BrokerEvents;
+import com.github.petruki.battleship.broker.data.ShotDTO;
+import com.github.petruki.battleship.model.Player;
+import com.github.petruki.battleship.model.ScoreboardOnline;
 import com.github.petruki.battleship.model.SlotType;
 import com.github.petruki.battleship.model.Target;
 
@@ -51,27 +56,36 @@ public class ControlMPUI extends JPanel {
 		add(btnFire);
 	}
 	
-	private void onHit(final BoardMPUI boardUI, final HeaderMPUI headerUI, final Target result) {
+	private void onHit(final BoardMPUI boardUI, final HeaderMPUI headerUI, final Target result, String player) {
+		ScoreboardOnline onlineScore = context.getGameController().getOnlineScoreBoard();
+		Player playerScore = onlineScore.getPlayer(player);
+		
 		if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
-			headerUI.updateText("Oops, you already hit that location!");
+			headerUI.updateText(String.format("Oops, %s hit the same location.", player));
 		else {
+			playerScore.addPoint();
 			if (context.getGameController().hasSink(boardUI.getBoard(), result.getShipId())) {
-				headerUI.updateText("You sank my battleship!");
+				headerUI.updateText("Battleship has been sank!");
 			} else {
-				headerUI.updateText("HIT!");
+				headerUI.updateText(String.format("%s HIT the ship!", player));
 			}
 
 			headerUI.updateScoreUI(true);
 		}
 	}
 
-	private void onMiss(final HeaderMPUI headerUI) {
-		headerUI.updateText("You missed.");
+	private void onMiss(final HeaderMPUI headerUI, String player) {
+		ScoreboardOnline onlineScore = context.getGameController().getOnlineScoreBoard();
+		Player playerScore = onlineScore.getPlayer(player);
+		
+		playerScore.removePoint();
+		headerUI.updateText(String.format("%s missed.", player));
 		headerUI.updateScoreUI(false);
 	}
 	
 	public void onFire(ActionEvent event) {
 		try {
+			ShotDTO shotDTO = new ShotDTO(BrokerEvents.PLAYER_HAS_SHOT);
 			final BoardMPUI boardUI = context.getBoardUI();
 			final HeaderMPUI headerUI = context.getHeaderUI();
 			final Target result = context
@@ -79,17 +93,20 @@ public class ControlMPUI extends JPanel {
 					.onFire(boardUI.getBoard(), txtCoordinate.getText());
 			
 			if (result.getSlotType() == SlotType.HIT) {
-				onHit(boardUI, headerUI, result);
+				onHit(boardUI, headerUI, result, BrokerClient.getInstance().getPlayer().getUsername());
 			} else {
-				onMiss(headerUI);
-			}
-			
-			if (context.getGameController().activateRadar()) {
-				headerUI.updateText("Radar is activated for 5 seconds!");
+				onMiss(headerUI, BrokerClient.getInstance().getPlayer().getUsername());
 			}
 			
 			//updates the board
 			boardUI.updateBoard(result, result.getRowCoord(), result.getColCoord());
+			boardUI.setEnabled(false);
+			setVisible(false);
+			
+			//notify other players
+			shotDTO.setCoord(txtCoordinate.getText());
+			shotDTO.setPlayer(BrokerClient.getInstance().getPlayer().getUsername());
+			BrokerClient.getInstance().emitEvent(shotDTO);
 		} catch (Exception e) {
 			logger.error(e);
 			if (event != null)
@@ -97,8 +114,33 @@ public class ControlMPUI extends JPanel {
 		}
 	}
 	
+	public void onFireByOponent(ShotDTO shotDTO) {
+		try {
+			final BoardMPUI boardUI = context.getBoardUI();
+			final HeaderMPUI headerUI = context.getHeaderUI();
+			final Target result = context
+					.getGameController()
+					.onFire(boardUI.getBoard(), shotDTO.getCoord());
+			
+			if (result.getSlotType() == SlotType.HIT) {
+				onHit(boardUI, headerUI, result, shotDTO.getPlayer());
+			} else {
+				onMiss(headerUI, shotDTO.getPlayer());
+			}
+			
+			//updates the board
+			boardUI.updateBoard(result, result.getRowCoord(), result.getColCoord());
+		} catch (Exception e) {
+			logger.error(e);
+		}
+	}
+	
 	public void updateCoordinates(String coordinates) {
 		txtCoordinate.setText(coordinates);
+	}
+	
+	public String getCoordinates() {
+		return txtCoordinate.getText();
 	}
 
 }
