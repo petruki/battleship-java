@@ -17,6 +17,7 @@ import com.github.petruki.battleship.broker.BrokerEvents;
 import com.github.petruki.battleship.broker.data.BrokerData;
 import com.github.petruki.battleship.broker.data.MatchDTO;
 import com.github.petruki.battleship.broker.data.PlayerDTO;
+import com.github.petruki.battleship.broker.data.RoomDataDTO;
 import com.github.petruki.battleship.broker.data.ShotDTO;
 import com.github.petruki.battleship.controller.GameController;
 import com.github.petruki.battleship.controller.OnlineGameController;
@@ -54,6 +55,7 @@ public class MainMPUI extends JFrame {
 		client.subscribe(BrokerEvents.NEW_ROUND.toString(), this::onRoundStarted);
 		client.subscribe(BrokerEvents.SELECT_PLAYER.toString(), this::onPlayerSelected);
 		client.subscribe(BrokerEvents.PLAYER_HAS_SHOT.toString(), this::onPlayerShotting);
+		client.subscribe(BrokerEvents.ROOM_DATA.toString(), this::onRoomUpdate);
 		
 		this.gameSettings = gameSettings;
 		buildPanel();
@@ -152,6 +154,11 @@ public class MainMPUI extends JFrame {
 		
 		if (!client.getPlayer().getUsername().equals(shotDTO.getPlayer()))
 			controlUI.onFireByOponent(shotDTO);
+	}
+	
+	private void onRoomUpdate(Object... args) {
+		RoomDataDTO roomDataDTO = BrokerData.getDTO(RoomDataDTO.class, args);
+		headerUI.updateText(roomDataDTO.getMessage());
 	}
 	
 	public void onStartNewGame(ActionEvent event) {

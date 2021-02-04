@@ -119,7 +119,7 @@ public class MultiplayerDialog extends JDialog {
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
 		btnStart = new JButton("Start");
-		btnStart.setEnabled(true);
+		btnStart.setEnabled(false);
 		btnStart.setForeground(new Color(255, 255, 255));
 		btnStart.setBackground(new Color(128, 0, 0));
 		btnStart.setFont(new Font("Tahoma", Font.BOLD, 18));
