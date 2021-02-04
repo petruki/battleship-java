@@ -92,7 +92,7 @@ public class MainMPUI extends JFrame {
 		scoreUI.setVisible(false);
 		
 		if (!client.getPlayer().isHost()) {
-			headerUI.setInvitedPlayerView();
+			headerUI.hideMenu();
 		}
 		
 		addWindowListener(new WindowAdapter() {
@@ -125,10 +125,12 @@ public class MainMPUI extends JFrame {
 						.generateMatrix(7, 7, gameSettings.getShips(), gameSettings.getShipSize());
 		}
 		
-		headerUI.reloadGame(client.getPlayer().isHost());
-		boardUI.setBoard(matrix);
+		int targets = 0;
+		targets = boardUI.setBoard(matrix);
 		boardUI.setEnabled(false);
+		headerUI.reloadGame(client.getPlayer().isHost());
 		scoreUI.updateScore(gameController.getScoreBoard());
+		gameController.getScoreBoard().setTargets(targets);
 		
 		return matrix;
 	}
@@ -139,8 +141,10 @@ public class MainMPUI extends JFrame {
 	}
 	
 	private void onPlayerSelected(Object... args) {
-		controlUI.setVisible(true);
-		boardUI.setEnabled(true);
+		if (gameController.getScoreBoard().getTargets() > 0) {
+			controlUI.setVisible(true);
+			boardUI.setEnabled(true);			
+		}
 	}
 	
 	private void onPlayerShotting(Object... args) {
@@ -152,15 +156,25 @@ public class MainMPUI extends JFrame {
 	
 	public void onStartNewGame(ActionEvent event) {
 		// bring players waiting on the lobby to join the round
-		MatchDTO matchDTO = new MatchDTO(BrokerEvents.MATCH_STARTED);
-		client.emitEvent(matchDTO);
+		client.emitEvent(new MatchDTO(BrokerEvents.MATCH_STARTED));
 		
-		final Object[][] matrix = onSetupMatch(null);
-		
-		// share board with players and start rotation
-		matchDTO = new MatchDTO(BrokerEvents.NEW_ROUND);
-		matchDTO.setMatrix(matrix);
-		client.emitEvent(matchDTO);
+		headerUI.updateText("Match will start in 5 seconds...");
+		headerUI.hideMenu();
+		new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(5000);
+					final Object[][] matrix = onSetupMatch(null);
+					
+					// share board with players and start rotation
+					MatchDTO matchDTO = new MatchDTO(BrokerEvents.NEW_ROUND);
+					matchDTO.setMatrix(matrix);
+					client.emitEvent(matchDTO);
+					headerUI.updateText("");
+				} catch (InterruptedException e) {}
+				
+			};
+		}.start();
 	}
 	
 	public void onGameFinished(ScoreboardOnline scoreBoard) {
@@ -172,8 +186,6 @@ public class MainMPUI extends JFrame {
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
 		headerUI.onGameFinished(client.getPlayer().isHost());
-		
-		System.out.println(gameController.getOnlineScoreBoard());
 	}
 	
 	public void onGameEnded() {

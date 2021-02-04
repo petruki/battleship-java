@@ -29,9 +29,16 @@ public class GameSettingsDialog extends JDialog {
 	private JComboBox<Integer> comboShips;
 	private JComboBox<Integer> comboShipSize;
 	private JComboBox<String> comboTimeLimit;
+	
 	private boolean startGame = false;
+	private boolean hideTimelimit = false;
 	
 	public GameSettingsDialog() {
+		buildPanel();
+	}
+	
+	public GameSettingsDialog(boolean hideTimelimit) {
+		this.hideTimelimit = hideTimelimit;
 		buildPanel();
 	}
 	
@@ -62,14 +69,16 @@ public class GameSettingsDialog extends JDialog {
 		comboShipSize.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1, 2, 3, 4}));
 		comboShipSize.setSelectedIndex(2);
 		contentPanel.add(comboShipSize, "cell 1 1,growx");
-
-		JLabel lblTimeLimit = new JLabel("Time limit");
-		contentPanel.add(lblTimeLimit, "cell 0 2,alignx trailing");
-
-		comboTimeLimit = new JComboBox<>();
-		comboTimeLimit.setModel(new DefaultComboBoxModel<String>(new String[] {"0:10", "0:20", "0:30", "0:40", "0:50"}));
-		comboTimeLimit.setSelectedIndex(1);
-		contentPanel.add(comboTimeLimit, "cell 1 2,growx");
+		
+		if (!hideTimelimit) {
+			JLabel lblTimeLimit = new JLabel("Time limit");
+			
+			comboTimeLimit = new JComboBox<>();
+			comboTimeLimit.setModel(new DefaultComboBoxModel<String>(new String[] {"0:10", "0:20", "0:30", "0:40", "0:50"}));
+			comboTimeLimit.setSelectedIndex(1);
+			contentPanel.add(lblTimeLimit, "cell 0 2,alignx trailing");
+			contentPanel.add(comboTimeLimit, "cell 1 2,growx");
+		}
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -100,14 +109,18 @@ public class GameSettingsDialog extends JDialog {
 	public void setSettings(GameSettings gameSettings) {
 		comboShips.setSelectedItem(gameSettings.getShips());
 		comboShipSize.setSelectedItem(gameSettings.getShipSize());
-		comboTimeLimit.setSelectedItem(gameSettings.getTimeLimit());
+		
+		if (!hideTimelimit)
+			comboTimeLimit.setSelectedItem(gameSettings.getTimeLimit());
 	}
 	
 	public GameSettings getSettings() {
 		final GameSettings gameSettings = new GameSettings();
 		gameSettings.setShips(Integer.parseInt(comboShips.getSelectedItem().toString()));
 		gameSettings.setShipSize(Integer.parseInt(comboShipSize.getSelectedItem().toString()));
-		gameSettings.setTimeLimit(comboTimeLimit.getSelectedItem().toString());
+		
+		if (!hideTimelimit)
+			gameSettings.setTimeLimit(comboTimeLimit.getSelectedItem().toString());
 		
 		return gameSettings;
 	}

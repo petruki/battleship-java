@@ -65,7 +65,7 @@ public class HeaderMPUI extends JPanel {
 		btnStart = new JButton("Start");
 		btnStart.setForeground(Color.WHITE);
 		btnStart.setBackground(new Color(0, 128, 0));
-		btnStart.setBounds(903, 11, 87, 30);
+		btnStart.setBounds(612, 11, 87, 30);
 		btnStart.setFocusable(false);
 		btnStart.addActionListener(context::onStartNewGame);
 		add(btnStart);
@@ -75,7 +75,7 @@ public class HeaderMPUI extends JPanel {
 		btnStop.setBackground(new Color(0, 128, 0));
 		btnStop.setBounds(903, 10, 87, 30);
 		btnStop.setFocusable(false);
-		btnStop.setVisible(false);
+		btnStop.setEnabled(false);
 		btnStop.addActionListener(this::onEndGame);
 		add(btnStop);
 		
@@ -98,7 +98,7 @@ public class HeaderMPUI extends JPanel {
 	}
 	
 	private void onSettings(ActionEvent event) {
-		GameSettingsDialog gameSettingsDialog = new GameSettingsDialog();
+		GameSettingsDialog gameSettingsDialog = new GameSettingsDialog(true);
 		gameSettingsDialog.setSettings(context.getSettings());
 		gameSettingsDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		gameSettingsDialog.setVisible(true);
@@ -116,7 +116,7 @@ public class HeaderMPUI extends JPanel {
 	}
 	
 	private void onEndGame(ActionEvent event) {
-		btnStop.setVisible(false);
+		btnStop.setEnabled(false);
 		context.onGameEnded();
 	}
 	
@@ -136,11 +136,10 @@ public class HeaderMPUI extends JPanel {
 		txtTimer.setText(String.format(pattern, minutes, secs));
 	}
 	
-	public void setInvitedPlayerView() {
-		btnStart.setVisible(false);
-		btnSettings.setVisible(false);
-		btnStop.setVisible(false);
-		btnOffline.setBounds(903, 11, 87, 30);
+	public void hideMenu() {
+		btnStart.setEnabled(false);
+		btnSettings.setEnabled(false);
+		btnStop.setEnabled(false);
 	}
 	
 	public void updateScoreUI(boolean hit) {
@@ -161,16 +160,16 @@ public class HeaderMPUI extends JPanel {
 	
 	public void reloadGame(boolean isHost) {
 		if (!isHost) {
-			btnOffline.setVisible(true);
+			btnOffline.setEnabled(true);
 		} else {
-			btnOffline.setVisible(false);
-			btnStart.setVisible(false);
-			btnStop.setVisible(true);
+			btnOffline.setEnabled(false);
+			btnStart.setEnabled(false);
+			btnStop.setEnabled(true);
 		}
 
 		txtTimer.setText("0:00");
 		txtMessage.setText("");
-		btnSettings.setVisible(false);
+		btnSettings.setEnabled(false);
 		
 		TimerTask timerTask = new TimerTask() {
             @Override
@@ -193,9 +192,9 @@ public class HeaderMPUI extends JPanel {
 		timer.cancel();
 		
 		if (isHost) {
-			btnSettings.setVisible(true);
-			btnStart.setVisible(true);
-			btnOffline.setVisible(true);
+			btnSettings.setEnabled(true);
+			btnStart.setEnabled(true);
+			btnOffline.setEnabled(true);
 		}
 	}
 	

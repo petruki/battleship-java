@@ -17,7 +17,6 @@ import com.github.petruki.battleship.model.ScoreboardOnline;
 public class EndGameScoreMPUI extends JPanel {
 	
 	private JTable table;
-	private DefaultTableModel scoreModel;
 
 	public EndGameScoreMPUI() {
 		buildPanel();
@@ -34,11 +33,6 @@ public class EndGameScoreMPUI extends JPanel {
 		add(scrollPane);
 		
 		table = new JTable();
-		scoreModel = new DefaultTableModel(
-				new String[][] {},
-				new String[] {"Player", "Score"}
-			);
-		table.setModel(scoreModel);
 		scrollPane.setViewportView(table);
 		
 		JLabel lblNewLabel = new JLabel("Scoreboard");
@@ -52,8 +46,14 @@ public class EndGameScoreMPUI extends JPanel {
 	public void showScore(ScoreboardOnline scoreBoard) {
 		setVisible(true);
 		
+		DefaultTableModel scoreModel = new DefaultTableModel(
+				new String[][] {},
+				new String[] {"Player", "Score"});
+		
 		for (Player	player : scoreBoard.getPlayers()) {
 			scoreModel.addRow(new Object[] { player.getUsername(), player.getScore() });
 		}
+		
+		table.setModel(scoreModel);
 	}
 }
