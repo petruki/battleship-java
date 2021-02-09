@@ -20,6 +20,7 @@ public class ResourcesCache {
 			images.put(ResourceConstants.IMG_BOARD.toString(), LoadImage.load("board.jpg"));
 			images.put(ResourceConstants.IMG_BOARD_END_BAD.toString(), LoadImage.load("board_gameover.png"));
 			images.put(ResourceConstants.IMG_BOARD_END_GOOD.toString(), LoadImage.load("board_end.png"));
+			images.put(ResourceConstants.IMG_BOARD_GG.toString(), LoadImage.load("board_gg.png"));
 			images.put(ResourceConstants.IMG_MISS.toString(), LoadImage.load("miss.png"));
 			images.put(ResourceConstants.IMG_HIT.toString(), LoadImage.load("ship.png"));
 		}

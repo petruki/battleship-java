@@ -132,12 +132,15 @@ public class MainMPUI extends JFrame {
 		boardUI.setEnabled(false);
 		headerUI.reloadGame(client.getPlayer().isHost());
 		scoreUI.updateScore(gameController.getScoreBoard());
-		gameController.getScoreBoard().setTargets(targets);
-		
+		gameController.getScoreBoard().setTargets(targets);	
+	
 		return matrix;
 	}
 	
 	private void onRoundStarted(Object... args) {
+		controlUI.setVisible(false);
+		boardUI.setEnabled(false);
+		
 		MatchDTO matchDTO = BrokerData.getDTO(MatchDTO.class, args);
 		onSetupMatch(matchDTO.getMatrix(matchDTO.getMatrix()));
 	}
@@ -186,7 +189,7 @@ public class MainMPUI extends JFrame {
 	
 	public void onGameFinished(ScoreboardOnline scoreBoard) {
 		contentPane.setBackground(
-			ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_END_GOOD));
+			ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_GG));
 		
 		endGameScoreUI.showScore(scoreBoard);
 		boardUI.setVisible(false);

@@ -54,7 +54,7 @@ public class BoardMPUI extends JTable {
 		});
 	}
 	
-	public int setBoard(Object[][] matrix) {
+	public synchronized int setBoard(Object[][] matrix) {
 		setModel(tableModel.getTableModel(matrix));
 		new TableRender(this, context.getGameController());
 		
