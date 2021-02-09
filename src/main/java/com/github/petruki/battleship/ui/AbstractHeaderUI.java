@@ -114,6 +114,10 @@ public abstract class AbstractHeaderUI extends JPanel {
 		context.getScoreUI().updateScore(scoreBoard);
 	}
 	
+	public void updateScoreUI(boolean hit) {
+		this.updateScoreUI(hit, "Good game!");
+	}
+	
 	public void onEndGame(ActionEvent event) {
 		btnStop.setEnabled(false);
 		context.onGameEnded();

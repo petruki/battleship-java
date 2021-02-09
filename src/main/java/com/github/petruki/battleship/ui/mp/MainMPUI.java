@@ -23,6 +23,7 @@ import com.github.petruki.battleship.controller.GameController;
 import com.github.petruki.battleship.controller.OnlineGameController;
 import com.github.petruki.battleship.model.GameSettings;
 import com.github.petruki.battleship.model.ScoreboardOnline;
+import com.github.petruki.battleship.ui.AbstractControlUI;
 import com.github.petruki.battleship.ui.MainUI;
 import com.github.petruki.battleship.ui.MainUIActionEvent;
 import com.github.petruki.battleship.ui.ScoreUI;
@@ -244,7 +245,7 @@ public class MainMPUI extends JFrame implements MainUIActionEvent {
 		return headerUI;
 	}
 
-	public ControlMPUI getControlUI() {
+	public AbstractControlUI getControlUI() {
 		return controlUI;
 	}
 

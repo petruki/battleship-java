@@ -156,7 +156,7 @@ public class MainUI extends JFrame implements MainUIActionEvent {
 		return headerUI;
 	}
 
-	public ControlUI getControlUI() {
+	public AbstractControlUI getControlUI() {
 		return controlUI;
 	}
 

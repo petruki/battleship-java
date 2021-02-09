@@ -20,5 +20,11 @@ public interface MainUIActionEvent {
 	public GameController getGameController();
 	
 	public ScoreUI getScoreUI();
+	
+	public AbstractControlUI getControlUI();
+	
+	public AbstractBoardUI getBoardUI();
+	
+	public AbstractHeaderUI getHeaderUI();
 
 }

@@ -1,13 +1,8 @@
 package com.github.petruki.battleship.ui;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,61 +14,19 @@ import com.github.petruki.battleship.model.Target;
  * @author petruki (Roger Floriano)
  */
 @SuppressWarnings("serial")
-public class ControlUI extends JPanel {
+public class ControlUI extends AbstractControlUI {
 	
 	private static final Logger logger = LogManager.getLogger(ControlUI.class);
 	
-	private JTextPane txtCoordinate;
-	private final MainUI context;
-	
 	public ControlUI(final MainUI context) {
-		this.context = context;
-		buildPanel();
+		super(context);
 	}
 	
-	private void buildPanel() {
-		setBackground(new Color(83, 175, 19));
-		setBounds(864, 98, 130, 96);
-		setLayout(null);
-
-		txtCoordinate = new JTextPane();
-		txtCoordinate.setFont(new Font("Tahoma", Font.BOLD, 13));
-		txtCoordinate.setBounds(10, 11, 110, 23);
-		add(txtCoordinate);
-
-		JButton btnFire = new JButton("Fire!");
-		btnFire.setForeground(new Color(255, 255, 255));
-		btnFire.setBackground(new Color(128, 0, 0));
-		btnFire.setFont(new Font("Tahoma", Font.BOLD, 18));
-		btnFire.setBounds(10, 45, 107, 40);
-		btnFire.setFocusable(false);
-		btnFire.addActionListener(this::onFire);
-		add(btnFire);
-	}
-	
-	private void onHit(final BoardUI boardUI, final HeaderUI headerUI, final Target result) {
-		if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
-			headerUI.updateText("Oops, you already hit that location!");
-		else {
-			if (context.getGameController().hasSink(boardUI.getBoard(), result.getShipId())) {
-				headerUI.updateText("You sank my battleship!");
-			} else {
-				headerUI.updateText("HIT!");
-			}
-
-			headerUI.updateScoreUI(true);
-		}
-	}
-
-	private void onMiss(final HeaderUI headerUI) {
-		headerUI.updateText("You missed.");
-		headerUI.updateScoreUI(false);
-	}
-	
+	@Override
 	public void onFire(ActionEvent event) {
 		try {
-			final BoardUI boardUI = context.getBoardUI();
-			final HeaderUI headerUI = context.getHeaderUI();
+			final AbstractBoardUI boardUI = context.getBoardUI();
+			final AbstractHeaderUI headerUI = context.getHeaderUI();
 			final Target result = context
 					.getGameController()
 					.onFire(boardUI.getBoard(), txtCoordinate.getText());
@@ -93,8 +46,28 @@ public class ControlUI extends JPanel {
 		} catch (Exception e) {
 			logger.error(e);
 			if (event != null)
-				JOptionPane.showMessageDialog(context, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	private void onHit(final AbstractBoardUI boardUI, final AbstractHeaderUI headerUI, 
+			final Target result) {
+		if (boardUI.getModel().getValueAt(result.getRowCoord(), result.getColCoord()).equals(result))
+			headerUI.updateText("Oops, you already hit that location!");
+		else {
+			if (context.getGameController().hasSink(boardUI.getBoard(), result.getShipId())) {
+				headerUI.updateText("You sank my battleship!");
+			} else {
+				headerUI.updateText("HIT!");
+			}
+
+			headerUI.updateScoreUI(true);
+		}
+	}
+
+	private void onMiss(final AbstractHeaderUI headerUI) {
+		headerUI.updateText("You missed.");
+		headerUI.updateScoreUI(false);
 	}
 	
 	public void updateCoordinates(String coordinates) {

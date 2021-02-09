@@ -107,8 +107,4 @@ public class HeaderMPUI extends AbstractHeaderUI {
 		btnStop.setEnabled(false);
 	}
 	
-	public void updateScoreUI(boolean hit) {
-		super.updateScoreUI(hit, "Good game!");
-	}
-	
 }
