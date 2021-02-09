@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * @author petruki (Rogerio Floriano)
+ *
+ */
 public class ScoreboardOnline {
 	
 	private List<Player> players;

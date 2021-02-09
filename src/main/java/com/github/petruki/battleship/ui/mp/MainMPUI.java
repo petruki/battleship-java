@@ -24,6 +24,7 @@ import com.github.petruki.battleship.controller.OnlineGameController;
 import com.github.petruki.battleship.model.GameSettings;
 import com.github.petruki.battleship.model.ScoreboardOnline;
 import com.github.petruki.battleship.ui.MainUI;
+import com.github.petruki.battleship.ui.MainUIActionEvent;
 import com.github.petruki.battleship.ui.ScoreUI;
 import com.github.petruki.battleship.ui.board.BackgroundPanel;
 import com.github.petruki.battleship.util.ResourceConstants;
@@ -35,7 +36,7 @@ import com.github.petruki.battleship.util.ResourcesCache;
  * @author petruki (Roger Floriano)
  */
 @SuppressWarnings("serial")
-public class MainMPUI extends JFrame {
+public class MainMPUI extends JFrame implements MainUIActionEvent {
 
 	private GameSettings gameSettings;
 	private GameController gameController;
@@ -130,7 +131,7 @@ public class MainMPUI extends JFrame {
 		int targets = 0;
 		targets = boardUI.setBoard(matrix);
 		boardUI.setEnabled(false);
-		headerUI.reloadGame(client.getPlayer().isHost());
+		headerUI.reloadGame();
 		scoreUI.updateScore(gameController.getScoreBoard());
 		gameController.getScoreBoard().setTargets(targets);	
 	
@@ -164,6 +165,7 @@ public class MainMPUI extends JFrame {
 		headerUI.updateText(roomDataDTO.getMessage());
 	}
 	
+	@Override
 	public void onStartNewGame(ActionEvent event) {
 		// bring players waiting on the lobby to join the round
 		client.emitEvent(new MatchDTO(BrokerEvents.MATCH_STARTED));
@@ -187,7 +189,9 @@ public class MainMPUI extends JFrame {
 		}.start();
 	}
 	
-	public void onGameFinished(ScoreboardOnline scoreBoard) {
+	public void onGameFinished() {
+		final ScoreboardOnline scoreBoard = gameController.getOnlineScoreBoard();
+		
 		contentPane.setBackground(
 			ResourcesCache.getInstance().getImages(ResourceConstants.IMG_BOARD_GG));
 		
@@ -195,17 +199,17 @@ public class MainMPUI extends JFrame {
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
-		headerUI.onGameFinished(client.getPlayer().isHost());
+		headerUI.onGameFinished();
 	}
 	
 	public void onGameEnded() {
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
 		scoreUI.setVisible(false);
-		headerUI.onGameFinished(client.getPlayer().isHost());
+		headerUI.onGameFinished();
 	}
 	
-	public void onSwitchToOffline() {
+	public void onSwitchModes() {
 		client.unsubscribeAll();
 		client.emitEvent( new PlayerDTO(null, 
 				BrokerEvents.PLAYER_HAS_DISCONNECTED));

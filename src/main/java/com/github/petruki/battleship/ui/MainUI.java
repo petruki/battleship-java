@@ -25,7 +25,7 @@ import com.github.petruki.battleship.util.ResourcesCache;
  * @author petruki (Roger Floriano)
  */
 @SuppressWarnings("serial")
-public class MainUI extends JFrame {
+public class MainUI extends JFrame implements MainUIActionEvent {
 
 	private GameSettings gameSettings;
 	private GameController gameController;
@@ -82,6 +82,7 @@ public class MainUI extends JFrame {
 		setLocation(x, y);
 	}
 	
+	@Override
 	public void onStartNewGame(ActionEvent event) {
 		endGameScoreUI.setVisible(false);
 		boardUI.setVisible(true);
@@ -99,7 +100,9 @@ public class MainUI extends JFrame {
 		scoreUI.updateScore(gameController.getScoreBoard());
 	}
 	
-	public void onGameFinished(Scoreboard scoreBoard) {
+	public void onGameFinished() {
+		final Scoreboard scoreBoard = gameController.getScoreBoard();
+		
 		contentPane.setBackground(
 			ResourcesCache.getInstance().getImages(
 					scoreBoard.getFinalScore() > 0 ? 
@@ -113,6 +116,7 @@ public class MainUI extends JFrame {
 		headerUI.onGameFinished();
 	}
 	
+	@Override
 	public void onGameEnded() {
 		boardUI.setVisible(false);
 		controlUI.setVisible(false);
@@ -120,7 +124,7 @@ public class MainUI extends JFrame {
 		headerUI.onGameFinished();
 	}
 	
-	public void onSwitchToOnline() {
+	public void onSwitchModes() {
 		dispose();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -134,10 +138,12 @@ public class MainUI extends JFrame {
 		});
 	}
 	
+	@Override
 	public void changeSettings(GameSettings gameSettings) {
 		this.gameSettings = gameSettings;
 	}
 	
+	@Override
 	public GameSettings getSettings() {
 		return gameSettings;
 	}
@@ -158,6 +164,7 @@ public class MainUI extends JFrame {
 		return boardUI;
 	}
 
+	@Override
 	public ScoreUI getScoreUI() {
 		return scoreUI;
 	}
