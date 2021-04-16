@@ -13,17 +13,17 @@ Battleship Java is a simple Java Swing based game app.
 #### Features
 
 - Know how much time has left
-- Easy game reload
 - Scoreboard
 - Interactive board. Click and hit fire or Double-click to fire!
 - Custom settings
 - Radar power up!
+- Online Multiplayer - Requires running: [battlership-broker server](https://github.com/petruki/battleship-broker)
 
 
 #### Import to IDE
 
 Import the project as Maven Project.
-* Requires Java 11 or superior
+* Requires Java 8
 
 #### Compiling using Maven
 
