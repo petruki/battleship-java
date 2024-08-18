@@ -10,7 +10,6 @@ import javax.swing.SwingConstants;
 
 import com.github.petruki.battleship.model.Scoreboard;
 
-@SuppressWarnings("serial")
 public class EndGameScoreUI extends JPanel {
 	
 	private JLabel txtHit;
@@ -27,23 +26,23 @@ public class EndGameScoreUI extends JPanel {
 		setLayout(null);
 		setVisible(false);
 		
-		Font fornt = new Font("Tahoma", Font.PLAIN, 18);
+		Font font = new Font("Tahoma", Font.PLAIN, 18);
 		
 		JLabel lblHit = new JLabel("Hit");
 		lblHit.setBounds(10, 11, 46, 14);
-		lblHit.setFont(fornt);
+		lblHit.setFont(font);
 		lblHit.setForeground(Color.WHITE);
 		add(lblHit);
 		
 		JLabel lblMissed = new JLabel("Missed");
 		lblMissed.setBounds(10, 36, 62, 14);
-		lblMissed.setFont(fornt);
+		lblMissed.setFont(font);
 		lblMissed.setForeground(Color.WHITE);
 		add(lblMissed);
 		
 		JLabel lblScore = new JLabel("Score");
 		lblScore.setBounds(10, 72, 46, 14);
-		lblScore.setFont(fornt);
+		lblScore.setFont(font);
 		lblScore.setForeground(Color.WHITE);
 		add(lblScore);
 		
@@ -53,21 +52,21 @@ public class EndGameScoreUI extends JPanel {
 		
 		txtHit = new JLabel();
 		txtHit.setBounds(106, 14, 30, 15);
-		txtHit.setFont(fornt);
+		txtHit.setFont(font);
 		txtHit.setForeground(Color.WHITE);
 		txtHit.setHorizontalTextPosition(SwingConstants.RIGHT);
 		add(txtHit);
 		
 		txtMissed = new JLabel();
 		txtMissed.setBounds(106, 36, 30, 15);
-		txtMissed.setFont(fornt);
+		txtMissed.setFont(font);
 		txtMissed.setForeground(Color.WHITE);
 		txtMissed.setHorizontalTextPosition(SwingConstants.RIGHT);
 		add(txtMissed);
 		
 		txtScore = new JLabel();
 		txtScore.setBounds(106, 75, 30, 15);
-		txtScore.setFont(fornt);
+		txtScore.setFont(font);
 		txtScore.setForeground(Color.WHITE);
 		txtScore.setHorizontalTextPosition(SwingConstants.RIGHT);
 		add(txtScore);

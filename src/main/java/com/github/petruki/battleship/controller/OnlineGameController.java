@@ -14,7 +14,7 @@ import com.github.petruki.battleship.model.Target;
 public class OnlineGameController extends OfflineGameController {
 	
 	private static final Logger logger = LogManager.getLogger(OnlineGameController.class);
-	private ScoreboardOnline onlineScoreboard;
+	private final ScoreboardOnline onlineScoreboard;
 	
 	public OnlineGameController(int targets) {
 		super(targets);
@@ -35,7 +35,7 @@ public class OnlineGameController extends OfflineGameController {
 	
 	@Override
 	public Target onFire(Object[][] boardMatrix, String coord) throws Exception {
-		if (!coord.isEmpty() && coord.length() == 2) {
+		if (coord.length() == 2) {
 			int row = Arrays.binarySearch(Target.CHARS, String.valueOf(coord.charAt(0)).toUpperCase());
 			int col = Integer.parseInt(String.valueOf(coord.charAt(1)));
 			
@@ -44,12 +44,13 @@ public class OnlineGameController extends OfflineGameController {
 				Object result = boardMatrix[row][col];
 				
 				//already assigned shot
-				if (result instanceof Target) {
-					return (Target) result;
+				if (result instanceof Target resultOf) {
+					return resultOf;
 				} else {
 					int slot = Integer.parseInt(result.toString());
-					if (slot != 0)
+					if (slot != 0) {
 						boardMatrix[row][col] = -1;
+					}
 					
 					return Target.createTarget(slot, row, col);
 				}
@@ -57,7 +58,7 @@ public class OnlineGameController extends OfflineGameController {
 		}
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Coordinate: %s", coord));
+			logger.debug("Coordinate: {}", coord);
 		}
 
 		throw new Exception("Oops, that's off the board!");

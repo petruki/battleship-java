@@ -46,11 +46,11 @@ public class TableRender implements TableCellRenderer {
 	}
 	
 	private void setIcon(JPanel cell, JTable table, int row, int column, boolean isSelected) {
-		if (table.getModel().getValueAt(row, column) instanceof Target) {
-			if (isSelected)
+		if (table.getModel().getValueAt(row, column) instanceof Target target) {
+			if (isSelected) {
 				cell.setBackground(new Color(255, 0, 0, 80));
-			
-			Target target = (Target) table.getModel().getValueAt(row, column);
+			}
+
 			cell.add(new JLabel(target.getIcon()));
 		}
 	}

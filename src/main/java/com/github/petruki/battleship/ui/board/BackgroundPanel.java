@@ -5,23 +5,22 @@ import java.awt.Image;
 
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
 public class BackgroundPanel extends JPanel {
 
-	private Image background;
+	private transient Image backgroundImage;
 
-	public BackgroundPanel(Image background) {
-		this.background = background;
+	public BackgroundPanel(Image backgroundImage) {
+		this.backgroundImage = backgroundImage;
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(background, 0, 0, this);
+		g.drawImage(backgroundImage, 0, 0, this);
 	}
 
 	public void setBackground(Image background) {
-		this.background = background;
+		this.backgroundImage = background;
 		repaint();
 	}
 	

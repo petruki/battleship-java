@@ -5,26 +5,26 @@ import com.github.petruki.battleship.model.GameSettings;
 
 public interface MainUIActionEvent {
 	
-	public void onStartNewGame(ActionEvent event);
+	void onStartNewGame(ActionEvent event);
 	
-	public void changeSettings(GameSettings gameSettings);
+	void changeSettings(GameSettings gameSettings);
 	
-	public void onGameEnded();
+	void onGameEnded();
 	
-	public void onSwitchModes();
+	void onSwitchModes();
 	
-	public void onGameFinished();
+	void onGameFinished();
 	
-	public GameSettings getSettings();
+	GameSettings getSettings();
 	
-	public GameController getGameController();
+	GameController getGameController();
 	
-	public ScoreUI getScoreUI();
+	ScoreUI getScoreUI();
 	
-	public AbstractControlUI getControlUI();
+	AbstractControlUI getControlUI();
 	
-	public AbstractBoardUI getBoardUI();
+	AbstractBoardUI getBoardUI();
 	
-	public AbstractHeaderUI getHeaderUI();
+	AbstractHeaderUI getHeaderUI();
 
 }

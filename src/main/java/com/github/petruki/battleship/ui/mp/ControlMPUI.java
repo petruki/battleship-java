@@ -21,7 +21,6 @@ import com.github.petruki.battleship.ui.AbstractHeaderUI;
 /**
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class ControlMPUI extends AbstractControlUI {
 	
 	private static final Logger logger = LogManager.getLogger(ControlMPUI.class);

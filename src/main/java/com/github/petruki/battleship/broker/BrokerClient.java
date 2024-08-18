@@ -22,7 +22,7 @@ public class BrokerClient {
 	
 	private static BrokerClient instance;
 	private Socket socket;
-	private List<String> events;
+	private final List<String> events;
 	private Player player;
 	
 	private BrokerClient() {

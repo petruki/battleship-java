@@ -28,7 +28,7 @@ public class ScoreboardOnline {
 	public Player getPlayer(String player) {
 		Player playerFound;
 		
-		if (players.size() == 0) {
+		if (players.isEmpty()) {
 			playerFound = new Player(player);
 			players.add(playerFound);
 		} else {

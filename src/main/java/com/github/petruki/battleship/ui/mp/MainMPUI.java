@@ -36,11 +36,10 @@ import com.github.petruki.battleship.util.ResourcesCache;
  * 
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class MainMPUI extends JFrame implements MainUIActionEvent {
 
-	private GameSettings gameSettings;
-	private GameController gameController;
+	private transient GameSettings gameSettings;
+	private transient GameController gameController;
 
 	private BackgroundPanel contentPane;
 	private BoardMPUI boardUI;
@@ -49,7 +48,7 @@ public class MainMPUI extends JFrame implements MainUIActionEvent {
 	private HeaderMPUI headerUI;
 	private EndGameScoreMPUI endGameScoreUI;
 	
-	private final BrokerClient client;
+	private final transient BrokerClient client;
 
 	public MainMPUI(final GameSettings gameSettings) {
 		client = BrokerClient.getInstance();
@@ -66,7 +65,7 @@ public class MainMPUI extends JFrame implements MainUIActionEvent {
 	private void buildPanel() {
 		setTitle(String.format("Battleship Java - v1.0.5 [ONLINE] - %s", client.getPlayer().getUsername()));
 		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 880);
 		setResizable(false);
 		centerUI();
@@ -173,21 +172,21 @@ public class MainMPUI extends JFrame implements MainUIActionEvent {
 		
 		headerUI.updateText("Match will start in 5 seconds...");
 		headerUI.hideMenu();
-		new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(5000);
-					final Object[][] matrix = onSetupMatch(null);
-					
-					// share board with players and start rotation
-					MatchDTO matchDTO = new MatchDTO(BrokerEvents.NEW_ROUND);
-					matchDTO.setMatrix(matrix);
-					client.emitEvent(matchDTO);
-					headerUI.updateText("");
-				} catch (InterruptedException e) {}
-				
-			};
-		}.start();
+		new Thread(() -> {
+			try {
+				Thread.sleep(5000);
+				final Object[][] matrix = onSetupMatch(null);
+
+				// share board with players and start rotation
+				MatchDTO matchDTO = new MatchDTO(BrokerEvents.NEW_ROUND);
+				matchDTO.setMatrix(matrix);
+				client.emitEvent(matchDTO);
+				headerUI.updateText("");
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+
+		}).start();
 	}
 	
 	public void onGameFinished() {
@@ -217,14 +216,12 @@ public class MainMPUI extends JFrame implements MainUIActionEvent {
 		
 		dispose();
 		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainUI frame = new MainUI(gameSettings);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				MainUI frame = new MainUI(gameSettings);
+				frame.setVisible(true);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}

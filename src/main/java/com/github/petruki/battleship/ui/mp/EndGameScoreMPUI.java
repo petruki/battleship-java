@@ -13,7 +13,6 @@ import javax.swing.table.DefaultTableModel;
 import com.github.petruki.battleship.model.Player;
 import com.github.petruki.battleship.model.ScoreboardOnline;
 
-@SuppressWarnings("serial")
 public class EndGameScoreMPUI extends JPanel {
 	
 	private JTable table;

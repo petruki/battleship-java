@@ -13,7 +13,6 @@ import com.github.petruki.battleship.model.Target;
 /**
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class ControlUI extends AbstractControlUI {
 	
 	private static final Logger logger = LogManager.getLogger(ControlUI.class);
@@ -68,10 +67,6 @@ public class ControlUI extends AbstractControlUI {
 	private void onMiss(final AbstractHeaderUI headerUI) {
 		headerUI.updateText("You missed.");
 		headerUI.updateScoreUI(false);
-	}
-	
-	public void updateCoordinates(String coordinates) {
-		txtCoordinate.setText(coordinates);
 	}
 
 }

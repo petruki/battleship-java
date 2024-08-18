@@ -9,13 +9,12 @@ import com.github.petruki.battleship.model.Target;
 import com.github.petruki.battleship.ui.board.TableListener;
 import com.github.petruki.battleship.ui.board.TableModel;
 
-@SuppressWarnings("serial")
 public abstract class AbstractBoardUI extends JTable {
 	
-	protected TableModel tableModel;
-	protected final MainUIActionEvent context;
+	protected transient TableModel tableModel;
+	protected final transient MainUIActionEvent context;
 	
-	public AbstractBoardUI(final MainUIActionEvent context) {
+	protected AbstractBoardUI(final MainUIActionEvent context) {
 		this.context = context;
 		buildBoard();
 	}
@@ -41,7 +40,7 @@ public abstract class AbstractBoardUI extends JTable {
 			}
 
 			@Override
-			public void boardSelecetedAndFire(Target target) {
+			public void boardSelectedAndFire(Target target) {
 				context.getControlUI().updateCoordinates(target.getCoord());
 				context.getControlUI().onFire(null);
 			}

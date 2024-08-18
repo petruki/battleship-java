@@ -1,6 +1,7 @@
 package com.github.petruki.battleship.util;
 
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -24,7 +25,7 @@ public class LoadImage {
 				logger.info(image);
 			}
 			
-			return ImageIO.read(LoadImage.class.getClassLoader().getResource(image));
+			return ImageIO.read(Objects.requireNonNull(LoadImage.class.getClassLoader().getResource(image)));
 		} catch (Exception e) {
 			logger.error(e);
 			JOptionPane.showMessageDialog(null, String.format(IMAGE_ERROR, image), "Error", JOptionPane.ERROR_MESSAGE);

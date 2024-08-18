@@ -21,7 +21,7 @@ public class BrokerData {
         return action;
     }
 
-    public String getRooml() {
+    public String getRoom() {
         return room;
     }
 }

@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -22,10 +23,9 @@ import com.github.petruki.battleship.util.ResourcesCache;
 
 import net.miginfocom.swing.MigLayout;
 
-@SuppressWarnings("serial")
 public class GameSettingsDialog extends JDialog {
 
-	private JPanel contentPanel = new JPanel();
+	private final JPanel contentPanel = new JPanel();
 	private JComboBox<Integer> comboShips;
 	private JComboBox<Integer> comboShipSize;
 	private JComboBox<String> comboTimeLimit;
@@ -58,7 +58,7 @@ public class GameSettingsDialog extends JDialog {
 		contentPanel.add(lblNewLabel, "cell 0 0,alignx trailing");
 	
 		comboShips = new JComboBox<>();
-		comboShips.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1, 2, 3, 4, 5}));
+		comboShips.setModel(new DefaultComboBoxModel<>(new Integer[]{1, 2, 3, 4, 5}));
 		comboShips.setSelectedIndex(2);
 		contentPanel.add(comboShips, "cell 1 0,growx");
 
@@ -66,7 +66,7 @@ public class GameSettingsDialog extends JDialog {
 		contentPanel.add(lblShipSize, "cell 0 1,alignx trailing");
 
 		comboShipSize = new JComboBox<>();
-		comboShipSize.setModel(new DefaultComboBoxModel<Integer>(new Integer[] {1, 2, 3, 4}));
+		comboShipSize.setModel(new DefaultComboBoxModel<>(new Integer[]{1, 2, 3, 4}));
 		comboShipSize.setSelectedIndex(2);
 		contentPanel.add(comboShipSize, "cell 1 1,growx");
 		
@@ -74,7 +74,7 @@ public class GameSettingsDialog extends JDialog {
 			JLabel lblTimeLimit = new JLabel("Time limit");
 			
 			comboTimeLimit = new JComboBox<>();
-			comboTimeLimit.setModel(new DefaultComboBoxModel<String>(new String[] {"0:10", "0:20", "0:30", "0:40", "0:50"}));
+			comboTimeLimit.setModel(new DefaultComboBoxModel<>(new String[]{"0:10", "0:20", "0:30", "0:40", "0:50"}));
 			comboTimeLimit.setSelectedIndex(1);
 			contentPanel.add(lblTimeLimit, "cell 0 2,alignx trailing");
 			contentPanel.add(comboTimeLimit, "cell 1 2,growx");
@@ -116,11 +116,12 @@ public class GameSettingsDialog extends JDialog {
 	
 	public GameSettings getSettings() {
 		final GameSettings gameSettings = new GameSettings();
-		gameSettings.setShips(Integer.parseInt(comboShips.getSelectedItem().toString()));
-		gameSettings.setShipSize(Integer.parseInt(comboShipSize.getSelectedItem().toString()));
+		gameSettings.setShips(Integer.parseInt(Objects.requireNonNull(comboShips.getSelectedItem()).toString()));
+		gameSettings.setShipSize(Integer.parseInt(Objects.requireNonNull(comboShipSize.getSelectedItem()).toString()));
 		
-		if (!hideTimelimit)
-			gameSettings.setTimeLimit(comboTimeLimit.getSelectedItem().toString());
+		if (!hideTimelimit) {
+			gameSettings.setTimeLimit(Objects.requireNonNull(comboTimeLimit.getSelectedItem()).toString());
+		}
 		
 		return gameSettings;
 	}
