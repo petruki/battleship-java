@@ -1,21 +1,20 @@
 package com.github.petruki.battleship.ui.mp;
 
+import com.github.petruki.battleship.broker.BrokerClient;
+import com.github.petruki.battleship.ui.AbstractHeaderUI;
+import com.github.petruki.battleship.ui.dialog.GameSettingsDialog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JDialog;
-
-import com.github.petruki.battleship.broker.BrokerClient;
-import com.github.petruki.battleship.ui.AbstractHeaderUI;
-import com.github.petruki.battleship.ui.dialog.GameSettingsDialog;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class HeaderMPUI extends AbstractHeaderUI {
 	
 	public HeaderMPUI(final MainMPUI context) {
@@ -26,10 +25,9 @@ public class HeaderMPUI extends AbstractHeaderUI {
 	protected void onSettings(ActionEvent event) {
 		GameSettingsDialog gameSettingsDialog = new GameSettingsDialog(true);
 		gameSettingsDialog.setSettings(context.getSettings());
-		gameSettingsDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		gameSettingsDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		gameSettingsDialog.setVisible(true);
-		gameSettingsDialog.setDefaultCloseOperation(
-			    JDialog.DISPOSE_ON_CLOSE);
+		gameSettingsDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		gameSettingsDialog.addWindowListener(new WindowAdapter() {
 		    @Override

@@ -10,8 +10,7 @@ public class TableModel {
 	
 	private DefaultTableModel tableModel;
 	private Object[][] matrix;
-	
-	@SuppressWarnings("serial")
+
 	public DefaultTableModel getTableModel(Object[][] matrix) {
 		this.matrix = matrix;
 		tableModel = new DefaultTableModel(this.matrix, new Object[this.matrix.length]) {

@@ -26,16 +26,14 @@ public class GameInitializer {
 	}
 	
 	private static void startGame(final GameSettings gameSettings) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ResourcesCache.getInstance().initializeImages();
-					MainUI frame = new MainUI(gameSettings);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					logger.error(e);
-					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				ResourcesCache.getInstance().initializeImages();
+				MainUI frame = new MainUI(gameSettings);
+				frame.setVisible(true);
+			} catch (Exception e) {
+				logger.error(e);
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}

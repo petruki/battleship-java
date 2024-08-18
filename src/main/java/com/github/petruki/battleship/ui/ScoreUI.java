@@ -13,7 +13,6 @@ import com.github.petruki.battleship.model.Scoreboard;
 /**
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class ScoreUI extends JPanel {
 	
 	private JTextPane txtScoreHit;

@@ -11,13 +11,12 @@ import javax.swing.JTextPane;
 /**
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public abstract class AbstractControlUI extends JPanel {
 	
 	protected JTextPane txtCoordinate;
-	protected final MainUIActionEvent context;
+	protected final transient MainUIActionEvent context;
 	
-	public AbstractControlUI(final MainUIActionEvent context) {
+	protected AbstractControlUI(final MainUIActionEvent context) {
 		this.context = context;
 		buildPanel();
 	}

@@ -1,13 +1,11 @@
 package com.github.petruki.battleship.ui;
 
-import static org.junit.Assert.assertEquals;
-
+import com.github.petruki.battleship.model.GameSettings;
+import com.github.petruki.battleship.model.Target;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.petruki.battleship.model.GameSettings;
-import com.github.petruki.battleship.model.Target;
-import com.github.petruki.battleship.ui.MainUI;
+import static org.junit.Assert.assertEquals;
 
 public class UITest {
 	

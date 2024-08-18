@@ -25,12 +25,8 @@ public class Scoreboard {
 	public boolean addHit() {
 		this.hit++;
 		this.targets--;
-		
-		if (this.targets == 0) {
-			return true;
-		}
-		
-		return false;
+
+		return this.targets == 0;
 	}
 	
 	/**

@@ -24,11 +24,10 @@ import com.github.petruki.battleship.util.ResourcesCache;
  * 
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class MainUI extends JFrame implements MainUIActionEvent {
 
-	private GameSettings gameSettings;
-	private GameController gameController;
+	private transient GameSettings gameSettings;
+	private transient GameController gameController;
 
 	private BackgroundPanel contentPane;
 	private BoardUI boardUI;
@@ -45,7 +44,7 @@ public class MainUI extends JFrame implements MainUIActionEvent {
 	private void buildPanel() {
 		setTitle("Battleship Java - v1.0.5");
 		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 880);
 		setResizable(false);
 		centerUI();
@@ -126,14 +125,12 @@ public class MainUI extends JFrame implements MainUIActionEvent {
 	
 	public void onSwitchModes() {
 		dispose();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainMPUI frame = new MainMPUI(gameSettings);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				MainMPUI frame = new MainMPUI(gameSettings);
+				frame.setVisible(true);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}

@@ -1,21 +1,20 @@
 package com.github.petruki.battleship.ui;
 
+import com.github.petruki.battleship.model.Scoreboard;
+import com.github.petruki.battleship.ui.dialog.GameSettingsDialog;
+import com.github.petruki.battleship.ui.dialog.MultiplayerDialog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JDialog;
-
-import com.github.petruki.battleship.model.Scoreboard;
-import com.github.petruki.battleship.ui.dialog.GameSettingsDialog;
-import com.github.petruki.battleship.ui.dialog.MultiplayerDialog;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class HeaderUI extends AbstractHeaderUI {
 	
 	public HeaderUI(final MainUI context, final String timeLimit) {
@@ -26,10 +25,9 @@ public class HeaderUI extends AbstractHeaderUI {
 	protected void onSettings(ActionEvent event) {
 		GameSettingsDialog gameSettingsDialog = new GameSettingsDialog();
 		gameSettingsDialog.setSettings(context.getSettings());
-		gameSettingsDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		gameSettingsDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		gameSettingsDialog.setVisible(true);
-		gameSettingsDialog.setDefaultCloseOperation(
-			    JDialog.DISPOSE_ON_CLOSE);
+		gameSettingsDialog.setDefaultCloseOperation( DISPOSE_ON_CLOSE);
 		
 		gameSettingsDialog.addWindowListener(new WindowAdapter() {
 		    @Override
@@ -45,16 +43,16 @@ public class HeaderUI extends AbstractHeaderUI {
 	@Override
 	protected void onChangeMode(ActionEvent event) {
 		MultiplayerDialog multiplayerDialog = new MultiplayerDialog();
-		multiplayerDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		multiplayerDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		multiplayerDialog.setVisible(true);
-		multiplayerDialog.setDefaultCloseOperation(
-			    JDialog.DISPOSE_ON_CLOSE);
+		multiplayerDialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		multiplayerDialog.addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosed(WindowEvent e) {
-		    	if (multiplayerDialog.isLobbyCreated())
-		    		context.onSwitchModes();
+		    	if (multiplayerDialog.isLobbyCreated()) {
+					context.onSwitchModes();
+				}
 	    	}
 		});
 	}
@@ -109,7 +107,8 @@ public class HeaderUI extends AbstractHeaderUI {
 		btnStart.setVisible(true);
 		btnMode.setVisible(true);
 	}
-	
+
+	@Override
 	public void updateScoreUI(boolean hit) {
 		Scoreboard scoreBoard = context.getGameController().getScoreBoard();
 		super.updateScoreUI(hit, String.format("You sank all my battleships, in %s guesses.", 

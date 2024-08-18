@@ -5,7 +5,6 @@ import com.github.petruki.battleship.ui.board.TableRender;
 /**
  * @author petruki (Roger Floriano)
  */
-@SuppressWarnings("serial")
 public class BoardUI extends AbstractBoardUI {
 	
 	public BoardUI(final MainUI context) {

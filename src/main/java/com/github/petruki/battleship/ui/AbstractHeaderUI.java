@@ -12,7 +12,6 @@ import javax.swing.SwingConstants;
 
 import com.github.petruki.battleship.model.Scoreboard;
 
-@SuppressWarnings("serial")
 public abstract class AbstractHeaderUI extends JPanel {
 	
 	protected JButton btnStart;
@@ -22,20 +21,20 @@ public abstract class AbstractHeaderUI extends JPanel {
 	protected JLabel txtTimer;
 	protected JLabel txtMessage;
 	
-	protected Timer timer;
+	protected transient Timer timer;
 	protected int secs = 0;
 	protected int minutes = 0;
 	protected String pattern;
 	protected String timeLimit;
 	private final boolean online;
 	
-	protected final MainUIActionEvent context;
+	protected final transient MainUIActionEvent context;
 	
-	public AbstractHeaderUI(MainUIActionEvent context, boolean online) {
+	protected AbstractHeaderUI(MainUIActionEvent context, boolean online) {
 		this(context, null, online);
 	}
 	
-	public AbstractHeaderUI(MainUIActionEvent context, String timeLimit, boolean online) {
+	protected AbstractHeaderUI(MainUIActionEvent context, String timeLimit, boolean online) {
 		this.online = online;
 		this.context = context;
 		this.timeLimit = timeLimit;

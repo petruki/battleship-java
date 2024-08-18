@@ -112,7 +112,7 @@ public class OfflineGameController implements GameController {
 	
 	@Override
 	public Target onFire(Object[][] boardMatrix, String coord) throws Exception {
-		if (!coord.isEmpty() && coord.length() == 2) {
+		if (coord.length() == 2) {
 			int row = Arrays.binarySearch(Target.CHARS, String.valueOf(coord.charAt(0)).toUpperCase());
 			int col = Integer.parseInt(String.valueOf(coord.charAt(1)));
 			
@@ -121,8 +121,8 @@ public class OfflineGameController implements GameController {
 				Object result = boardMatrix[row][col];
 				
 				//already assigned shot
-				if (result instanceof Target) {
-					return (Target) result;
+				if (result instanceof Target resultOf) {
+					return resultOf;
 				} else {
 					int slot = Integer.parseInt(result.toString());
 					if (slot != 0)
@@ -147,16 +147,15 @@ public class OfflineGameController implements GameController {
 		if (missCounter >= 3) {
 			missCounter = 0;
 			radar = true;
-			new Thread() {
-				public void run() {
-					try {
-						Thread.sleep(5000);
-						radar = false;
-					} catch (InterruptedException e) {
-						logger.error(e);
-					}
-				};
-			}.start();
+			new Thread(() -> {
+				try {
+					Thread.sleep(5000);
+					radar = false;
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					logger.error(e);
+				}
+			}).start();
 			return true;
 		}
 		return false;

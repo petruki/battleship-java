@@ -1,27 +1,5 @@
 package com.github.petruki.battleship.ui.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.stream.Collectors;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.EmptyBorder;
-
 import com.github.petruki.battleship.broker.BrokerClient;
 import com.github.petruki.battleship.broker.BrokerEvents;
 import com.github.petruki.battleship.broker.data.BrokerData;
@@ -31,23 +9,27 @@ import com.github.petruki.battleship.broker.data.RoomDataDTO;
 import com.github.petruki.battleship.model.Player;
 import com.github.petruki.battleship.util.ResourceConstants;
 import com.github.petruki.battleship.util.ResourcesCache;
-
 import net.miginfocom.swing.MigLayout;
 
-@SuppressWarnings("serial")
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 public class MultiplayerDialog extends JDialog {
 
 	private JButton btnHost;
 	private JButton btnJoin;
 	private JButton btnStart;
-	private JPanel contentPanel = new JPanel();
+	private final JPanel contentPanel = new JPanel();
 	private JTextField txtRoomName;
 	private JTextField txtPlayerName;
 	private JLabel txtStatus;
-	private JList<String> listPlayers;
 	private DefaultListModel<String> listPlayersModel;
 	
-	private final BrokerClient client;
+	private final transient BrokerClient client;
 	
 	private boolean lobbyCreated;
 	private boolean matchStarted;
@@ -106,8 +88,8 @@ public class MultiplayerDialog extends JDialog {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
-		
-		listPlayers = new JList<>();
+
+		JList<String> listPlayers = new JList<>();
 		listPlayers.setFont(new Font("Tahoma", Font.BOLD, 26));
 		listPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listPlayersModel = new DefaultListModel<>();
@@ -225,8 +207,8 @@ public class MultiplayerDialog extends JDialog {
 		listPlayersModel.clear();
 		listPlayersModel.addAll(
 				roomDataDTO.getPlayers()
-				.stream().map(p -> p.getUsername())
-				.collect(Collectors.toList()));
+				.stream().map(Player::getUsername)
+				.toList());
 		
 		//update lobby status
 		txtStatus.setText(roomDataDTO.getMessage());
