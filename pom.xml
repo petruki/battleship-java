@@ -5,7 +5,7 @@
 
 	<groupId>com.github.petruki.battleship</groupId>
 	<artifactId>battleship-java</artifactId>
-	<version>1.0.6-SNAPSHOT</version>
+	<version>1.0.6</version>
 	<name>Battleship Java</name>
 
 	<properties>
@@ -14,11 +14,19 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 
-		<socketio.version>2.1.0</socketio.version>
+		<socketio.version>2.1.1</socketio.version>
 		<gson.version>2.11.0</gson.version>
 		<miglayout.version>3.7.4</miglayout.version>
 		<log4j.version>2.23.1</log4j.version>
 		<junit.version>5.11.0</junit.version>
+
+		<!-- Managed dependencies -->
+		<okhttp.version>4.12.0</okhttp.version>
+		<json.version>20240303</json.version>
+
+		<maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
+		<maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 	</properties>
 
 	<developers>
@@ -73,64 +81,61 @@
 		</dependency>
 	</dependencies>
 
+	<!-- Patch vulnerabilities introduced by transitive dependencies -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.squareup.okhttp3</groupId>
+				<artifactId>okhttp</artifactId>
+				<version>${okhttp.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>${json.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<configuration>
-						<archive>
-							<manifest>
-								<addClasspath>true</addClasspath>
-								<classpathPrefix>libs/</classpathPrefix>
-								<mainClass>
-									com.github.petruki.battleship.GameInitializer
-								</mainClass>
-							</manifest>
-						</archive>
-					</configuration>
-				</plugin>
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.3.0</version>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>single</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<archive>
-							<manifest>
-								<mainClass>com.github.petruki.battleship.GameInitializer</mainClass>
-							</manifest>
-						</archive>
-						<descriptorRefs>
-							<descriptorRef>jar-with-dependencies</descriptorRef>
-						</descriptorRefs>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M6</version>
-					<configuration>
-						<excludes>
-							<exclude>**/com/github/petruki/battleship/ui/UITest.java</exclude>
-							<exclude>**/com/github/petruki/battleship/TestSuite.java</exclude>
-						</excludes>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.1</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>${maven-shade-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>com.github.petruki.battleship.GameInitializer</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>**/com/github/petruki/battleship/ui/UITest.java</exclude>
+						<exclude>**/com/github/petruki/battleship/TestSuite.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>
