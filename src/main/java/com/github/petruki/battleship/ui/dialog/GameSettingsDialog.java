@@ -45,7 +45,7 @@ public class GameSettingsDialog extends JDialog {
 	private void buildPanel() {
 		setTitle("Battleship Settings");
 		setIconImage(ResourcesCache.getInstance().getImages(ResourceConstants.IMG_HIT));
-		setBounds(100, 100, 225, 179);
+		setBounds(100, 100, 225, 190);
 		setAlwaysOnTop(true);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

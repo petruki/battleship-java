@@ -65,6 +65,9 @@ public class Target {
 	}
 	
 	public String getCoord() {
+		if (rowCoord < 0 || rowCoord >= CHARS.length || colCoord < 0) {
+			return "Invalid Coordinates";
+		}
 		return CHARS[this.rowCoord] + this.colCoord;
 	}
 
