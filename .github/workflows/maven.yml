@@ -11,16 +11,16 @@ jobs:
     runs-on: ubuntu-latest
   
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up JDK 21
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'temurin'
         java-version: 21
         cache: 'maven'
 
     - name: Cache the Maven packages
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -33,8 +33,8 @@ jobs:
       runs-on: ubuntu-latest
       needs: [build_and_test]
       steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-java@v4
+        - uses: actions/checkout@v6
+        - uses: actions/setup-java@v5
           with:
             distribution: 'temurin'
             java-version: 21
