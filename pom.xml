@@ -22,7 +22,7 @@
 
 		<!-- Managed dependencies -->
 		<okhttp.version>4.12.0</okhttp.version>
-		<json.version>20240303</json.version>
+		<json.version>20260719</json.version>
 
 		<maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
 		<maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
